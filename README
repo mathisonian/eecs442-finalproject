@@ -1,1 +1,3 @@
-A novel implementation of dynamic image rescaling via scene reconstruction. We use the Hayes, Effros scene completion algorithm, found here: http://graphics.cs.cmu.edu/projects/im2gps/
+A novel implementation of dynamic image rescaling via scene reconstruction. We use the Hayes, Effros scene completion algorithm, found here: http://graphics.cs.cmu.edu/projects/scene-completion/
+
+We wish to use Avidan and Ahamir's method of finding the least entropic cut in an image for resizing.
