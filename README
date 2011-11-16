@@ -1,3 +1,45 @@
-A novel implementation of dynamic image rescaling via scene reconstruction. We use the Hayes, Effros scene completion algorithm, found here: http://graphics.cs.cmu.edu/projects/scene-completion/
+Final Project
+EECS 442 - Computer Vision
+University of Michigan
 
-We wish to use Avidan and Ahamir's method of finding the least entropic cut in an image for resizing.
+
+Implementing Scene Completion Algorithm
+with a Dynamic Image Resizing Extension
+
+Matthew Conlen
+Michael Gisi
+
+{mpconlen, gisi}@umich.edu
+
+1. Intro 
+
+We intend to implement the scene completion method proposed by Hays and Efros. This algorithm allows a user to identify a certain area of an image to automatically be filled with new content. We also propose a novel method to apply this algorithm automatically to dynamic, content-aware image resizing based upon the paper by Avidan and Ahamir.
+   
+2. Technical 
+
+We aim to largely follow the methods outlined by Hays and Efros. We will begin by accumulating a large collection of photographs (>1 million). Semantic similarity between photos will be estimated by a gist descriptor to ensure appropriate content is used in the scene completion algorithm. The authors use an open source gist descriptor ([Torralba et al. 2003; Oliva and
+Torralba 2006). The general algorithm for scene completion given by Hays and Efros is as follows:
+Compute gist descriptor of input image, excluding deleted regions
+Compute sum of squared differences between the input gist and all gists in the database
+Attempt context matching with ~200 best matching scenes from database
+Translate and scale each placement so as to achieve a minumum SSD error
+Insert each scene into the input image using seam finding and poisson blending
+Optimize gradient further as to reduce visual artifacts
+Present top composite images to user
+
+
+The authors ran this algorithm on a cluster of 15 computers and the runtime for processing a single image was about 5 minutes. They also note that using a single CPU the runtime was about 1 hour, so we may implement this in a multi-threaded manner if neccesary.
+
+After implementing the scene completion algorithm, we intend to apply it to image enlargement. Avidan and Ahamir propose a method to dynamically enlarge images by finding the “weakest seams” of the image and insert new seams there using the average values of surrounding pixels. We will do dynamic enlarging in a slightly different way. 
+
+We intend to use Avidan and Ahmir’s method to find the weakest seam. Given the weakest seam in the image, we can cut the image along the seam and pull it apart vertically or horizontally. This will leave us with an image which is the desired size, but now has an area without content. We will then use the previously described scene completion algorithm to fill in this area. 
+
+3. References
+
+James Hays, Alexei A. Efros. Scene Completion Using Millions of Photographs. ACM Transactions on Graphics (SIGGRAPH 2007). August 2007, vol. 26, No. 3.
+
+Shai Avidan, Ariel Ahamir. Seam Carving for Content-Aware Image Resizing. ACM Transactions on Graphics (SIGGRAPH 2007). August 2007, vol. 26, No. 3.
+
+Oliva, A., Torralba, A. 2006. Building the gist of a scene: The role of global image features in recognition. In Visual Perception, Progress in Brain Research, vol. 155
+
+Torralba, A., Murphy, K. P., Freeman, W. T., & Rubin, M. A. 2003. Context-based vision system for place and object recognition. In ICCV.
