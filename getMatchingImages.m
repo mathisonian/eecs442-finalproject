@@ -1,9 +1,8 @@
-function [ matches ] = getMatchingImages( imageName )
+function [ matches ] = getMatchingImages( img )
     
     GIST_WEIGHT_CONSTANT = 2;
     COLOR_WEIGHT_CONSTANT = 1;
 
-    img = imread(imgName);
     imgMask = roipoly(img);
     imgMask = (imgMask-1).^2;
     
