@@ -1,6 +1,8 @@
-function translation = matchContext(matchimg,inputimg,mask)
+function context_match = matchContext(matchimg,inputimg,selection)
 %returns the translaion and scale of the best context match
 %between matchimg and the original inputimg - removed selection
+
+disp('beginning context match...');
 
 %pixels within this radius are a part of the input's context
 CONTEXT_RADIUS = 80;
@@ -14,15 +16,17 @@ TRANSLATE_ERROR = 1;
 %scales the texture descriptor error
 TEXTURE_ERROR = 1;
 
+disp('reading files...');
+
 %read files
 match = imread(matchimg);
 input = imread(inputimg);
-cform = makecform('argb2lab');
 insize = size(input);
-selection = mask;
+
+disp('building context mask...');
 
 %build context matrix
-context = zeroes(selection(1),selection(2));
+context = zeros(insize(1),insize(2));
 
 %boundaries of context
 c_x = ([-1 -1]);
@@ -55,26 +59,26 @@ for i=1:insize(1)
     end
 end
 
+disp('finding minimum ssd...');
+
 %now compute the SSD across all valid translations and scales
 %find minimum SSD
 minSSD = -1;
-for i=VALID_SCALE(1):VALID_SCALE(size(VALID_SCALE))
-    scl = imresize(match, i);
+sz = size(VALID_SCALE);
+for i=1:sz(2)
+    scl = imresize(match, VALID_SCALE(i));
     sclsz = size(scl);
     for xt=(c_x(2)-sclsz(1)):(c_x(1)-1)
-        for yt=(c_y(2)-sclsz(2)):(c_y(1)-1)
-            if((sclsz(1)+xt)>=c_x(2) && (1+xt)<=c_x(1) && (sclsz(2)+yt)>=c_y(2) && (1+yt)<=c_y(2))
+        for yt=(c_y(2)-sclsz(2)):(c_y(1)-1)           
                 x = getContextSSD(scl,xt,yt,input,context);
                 x = x + xt*TRANSLATE_ERROR + yt*TRANSLATE_ERROR;
-                x = TEXTURE_ERROR*getContextTFilt(scl,xt,yt,input,context);
+                x = x + TEXTURE_ERROR*getContextTFilt(scl,xt,yt,input,context);
                 if(minSSD==-1 || x<minSSD)
                     minSSD=x;
-                    translation = struct('x_t',xt,'y_t',yt,'sc',i);
+                    context_match = struct('x_t',xt,'y_t',yt,'scale',VALID_SCALE(i),'context_mask',context);       
                 end
-            end
         end
     end
 end
-
 end
 
