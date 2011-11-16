@@ -1,4 +1,4 @@
-function g = gistGabor(img, w, G)
+function g = gistGaborMask(img, w, G, mask)
 % 
 % Input:
 %   img = input image (it can be a block: [nrows, ncols, c, Nimages])
@@ -30,10 +30,9 @@ size(g)
 
 img = single(fft2(img)); 
 k=0;
-Nfilters=1;
 for n = 1:Nfilters
     ig = abs(ifft2(img.*repmat(G(:,:,n), [1 1 N])));
-    v = downN(ig, w);
+    v = downNMask(ig, w, mask);
     g(k+1:k+W,:) = reshape(v, [W N]);
     k = k + W;
     drawnow
@@ -44,26 +43,4 @@ if c == 3
     % is one images output:
     g = reshape(g, [size(g,1)*3 size(g,2)/3]);
 end
-
-
-function y=downN(x, N)
-% 
-% averaging over non-overlapping square image blocks
-%
-% Input
-%   x = [nrows ncols nchanels]
-% Output
-%   y = [N N nchanels]
-
-nx = fix(linspace(0,size(x,1),N+1));
-ny = fix(linspace(0,size(x,2),N+1));
-y  = zeros(N, N, size(x,3));
-
-for xx=1:N
-  for yy=1:N
-    nx(xx)+1
-    nx(xx+1)
-    v=mean(mean(x(nx(xx)+1:nx(xx+1), ny(yy)+1:ny(yy+1),:),1),2);
-    y(xx,yy,:)=v(:);
-  end
 end
