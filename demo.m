@@ -1,5 +1,5 @@
 % Load image
-img = imread('test.jpg');
+img = imread('test1.jpg');
 
 % Parameters:
 Nblocks = 4;
