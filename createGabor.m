@@ -1,4 +1,4 @@
-function G = createGabor(or, n)
+function G = createGabor(or, nx, ny)
 %
 % G = createGabor(numberOfOrientationsPerScale, n);
 %
@@ -29,18 +29,20 @@ for i=1:Nscales
 end
 
 % Frequencies:
-[fx, fy] = meshgrid(-n/2:n/2-1);
+[fx, fy] = meshgrid(-nx/2:nx/2-1, -ny/2:ny/2-1);
+% [fx, fy] = meshgrid(-n/2:n/2-1);
 fr = fftshift(sqrt(fx.^2+fy.^2));
 t = fftshift(angle(fx+sqrt(-1)*fy));
 
 % Transfer functions:
-G=zeros([n n Nfilters]);
+G=zeros([nx ny Nfilters]);
 for i=1:Nfilters
     par=param(i,:);
-    tr=t+param(i,4); 
+    tr=t+param(i,4);
     tr=tr+2*pi*(tr<-pi)-2*pi*(tr>pi);
 
-    G(:,:,i)=exp(-10*param(i,1)*(fr/n/param(i,2)-1).^2-2*param(i,3)*pi*tr.^2);
+    % There might be a bug here...
+    G(:,:,i)=exp(-10*param(i,1)*(fr/nx/param(i,2)-1).^2-2*param(i,3)*pi*tr.^2);
 end
 
 
