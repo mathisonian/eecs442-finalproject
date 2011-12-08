@@ -4,18 +4,26 @@ function [ cutMask ] = graphCut( adjMatrix )
     w = size(adjMatrix,1);
     h = size(adjMatrix,h);
     
-    while % there are edges left to contract
+    while max(normalized(:)) < 1
         normalized = normalized / sum(normalized(:));
         r = rand(1);
         curPosition = 0;
+        contracted = 0;
         for i = 1:w
             for j = 1:h
                 curPosition = curPosition + normalized(i,j);
                 if r < curPosition
-                    % WE HAVE FOUND THE RANDOMLY SELECTED EDGE
-                    % contract this shit and do it again
+                    normalized(i,:) = normalized(i,:) + normalized(j,:);
+                    normalized(:,i) = normalized(:,i) + normalized(:,j);
+                    normalized(:,j) = zeros(w,1);
+                    normalized(j,:) = zeros(1,h);
+                    normalized(i,i) = 0;
+                    contracted = 1;
                     break;
                 end
+            end
+            if contracted == 1
+                break;
             end
         end
     end
