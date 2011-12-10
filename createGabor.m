@@ -18,7 +18,7 @@ function G = createGabor(or, nx, ny)
 
 
 Nscales = length(or);
-Nfilters = sum(or)
+Nfilters = sum(or);
 
 l=0;
 for i=1:Nscales
@@ -29,7 +29,7 @@ for i=1:Nscales
 end
 
 % Frequencies:
-[fx, fy] = meshgrid(-nx/2:nx/2-1, -ny/2:ny/2-1);
+[fx, fy] = meshgrid(-ny/2:ny/2-1,-nx/2:nx/2-1);
 % [fx, fy] = meshgrid(-n/2:n/2-1);
 fr = fftshift(sqrt(fx.^2+fy.^2));
 t = fftshift(angle(fx+sqrt(-1)*fy));
@@ -41,8 +41,7 @@ for i=1:Nfilters
     tr=t+param(i,4);
     tr=tr+2*pi*(tr<-pi)-2*pi*(tr>pi);
 
-    % There might be a bug here...
-    G(:,:,i)=exp(-10*param(i,1)*(fr/nx/param(i,2)-1).^2-2*param(i,3)*pi*tr.^2);
+    G(:,:,i)=exp(-10*param(i,1)*(fr/((nx+ny)/2)/param(i,2)-1).^2-2*param(i,3)*pi*tr.^2);
 end
 
 

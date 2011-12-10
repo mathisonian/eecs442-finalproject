@@ -26,7 +26,7 @@ end
 [n n Nfilters] = size(G);
 W = w*w;
 g = zeros([W*Nfilters N]);
-size(g)
+% size(g)
 
 img = single(fft2(img)); 
 k=0;
