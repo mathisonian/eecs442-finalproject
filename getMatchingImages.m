@@ -1,4 +1,4 @@
-function [ matches ] = getMatchingImages( img, indir )
+function [ matches, imgMask ] = getMatchingImages( img, indir )
     
     GIST_WEIGHT_CONSTANT = 2;
     COLOR_WEIGHT_CONSTANT = 1;
