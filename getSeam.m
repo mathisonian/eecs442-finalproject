@@ -1,4 +1,4 @@
-function [ dpArray ] = getSeam( img, isVertical )
+function [ seamMask ] = getSeam( img, isVertical )
 % Gets the seam thing
 
     image = rgb2gray(img);
@@ -8,6 +8,7 @@ function [ dpArray ] = getSeam( img, isVertical )
     h = size(image, 1);
     
     dpArray = -1.*ones(size(image));
+    seamMask = zeros(size(image));
     
     if isVertical == 1
         
@@ -19,7 +20,7 @@ function [ dpArray ] = getSeam( img, isVertical )
         [C,I] = min(dpArray(h,:));
         index = I(1);
         img(h,index,:) = [255,0,0];
-
+        seamMask(h,index) = 1;
         for i=h-1:-1:1
             if index == 1
                 [C,I] = min(dpArray(i,index:index+1));
@@ -32,6 +33,7 @@ function [ dpArray ] = getSeam( img, isVertical )
                 index = (index-2) + I(1);        
             end
             img(i,index,:) = [255,0,0];
+            seamMask(i,index) = 1;
         end
     else
         for i=1:h
@@ -42,6 +44,7 @@ function [ dpArray ] = getSeam( img, isVertical )
         [C,I] = min(dpArray(:,w));
         index = I(1);
         img(index,w,:) = [255,0,0];
+        seamMask(index,w) = 1;
         for j=w-1:-1:1
             if index == 1
                 [C,I] = min(dpArray(index:index+1,j));
@@ -54,6 +57,7 @@ function [ dpArray ] = getSeam( img, isVertical )
                 index = (index-2) + I(1);        
             end
             img(index,j,:) = [255,0,0];
+            seamMask(index,j) = 1;
         end
     end
     imshow(img)
