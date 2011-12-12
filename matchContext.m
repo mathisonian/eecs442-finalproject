@@ -14,7 +14,7 @@ VALID_SCALE = ([.81,1])
 TRANSLATE_ERROR = 1;
 
 %amount of pixels to increment at each translation
-PIXEL_JUMP = 5;
+PIXEL_JUMP = 10;
 
 %scales the texture descriptor error
 TEXTURE_ERROR = 1;
@@ -69,11 +69,12 @@ disp('finding minimum ssd...');
 
 %now compute the SSD across all valid translations and scales
 %find minimum SSD
-minSSD = -1;
+minSSD = Inf;
 sz = size(VALID_SCALE);
 
 cform = makecform('srgb2lab');
 input = applycform(input,cform);
+
 
 for i=1:sz(2)
     scl = imresize(match, VALID_SCALE(i));
@@ -81,12 +82,15 @@ for i=1:sz(2)
     sclsz = size(scl);
     xt=(c_x(2)-sclsz(1));
     while(xt<=(c_x(1)-1))
+        disp([num2str(xt) '/' num2str(c_x(1)-1)]);
+        
         yt=(c_y(2)-sclsz(2));
         while(yt<=(c_y(1)-1))      
+%                 disp(['    ' num2str(yt) '/' num2str(c_y(1)-1)]);
                 x = getContextSSD(scl,xt,yt,input,context);
                 x = x + xt*TRANSLATE_ERROR + yt*TRANSLATE_ERROR;
                 x = x + TEXTURE_ERROR*getContextTFilt(scl,xt,yt,input,context);
-                if(minSSD==-1 || x<minSSD)
+                if(x<minSSD)
                     disp('low ssd found');
                     minSSD=x;
                     context_match = struct('x_t',xt,'y_t',yt,'scale',VALID_SCALE(i),'context_mask',context);       

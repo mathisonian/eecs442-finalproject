@@ -5,14 +5,18 @@ function [ output_args ] = fillImage(img, dir)
     disp('done with matching images');
     count = 0;
     size(matches,2)
-    parfor k=1:size(matches,2)
+    for k=1:size(matches,2)
         match = matches{k};
         count = count + 1
         completedImg = img;
         matchImg = imread(match);
+        tic
         context_match = matchContext(matchImg, img, imgMask);
+        toc
         matchImg = imresize(matchImg, context_match.scale);
+        disp('beginning createAdj...');
         adjMatrix = createAdjacencyMatrix(img, matchImg, context_match.context_mask, imgMask, context_match.x_t, context_match.y_t);
+        disp('beginning graphCut...');
         cutMask = graphCut(adjMatrix, context_match.context_match);
         for i=1:size(cutMask,1)
             for j=1:size(cutMask,2)

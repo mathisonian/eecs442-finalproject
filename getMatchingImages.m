@@ -10,10 +10,9 @@ function [ matches, imgMask ] = getMatchingImages( img, indir )
     imgMask = roipoly(img);
     imgMask = (imgMask-1).^2;
     imgGist = getGistMask(img, imgMask);
-    
+    tic
     diffs = zeros(1,NUM_IMAGES);
     parfor i=1:NUM_IMAGES
-        i
         testGist = gists{i};
         testImg = imread(imgs{i});
         gistSSD = getSSD(imgGist, testGist);
@@ -28,6 +27,8 @@ function [ matches, imgMask ] = getMatchingImages( img, indir )
     for i=1:NUM_MATCHES
         matches{i} = imgs{IX(i)};
     end
+    
+    toc
     
     function count = getNumImages(indir, start)
         d = dir(indir);
