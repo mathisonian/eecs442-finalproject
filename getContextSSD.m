@@ -1,11 +1,8 @@
-function SSD = getContextSSD(match,xt,yt,input,context)
+function SSD = getContextSSD(m_l,xt,yt,i_l,context)
 %return sum of squared differences of context
 SSD=0;
-cform = makecform('srgb2lab');
-m_l = applycform(match,cform);
-i_l = applycform(input,cform);
 
-sz = size(input);
+sz = size(i_l);
 for i=1:sz(1)
     for j=1:sz(2)
         if(context(i,j)==1)

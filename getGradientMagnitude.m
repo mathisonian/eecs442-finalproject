@@ -1,7 +1,4 @@
-function [ F ] = getGradientMagnitude( x1,y1,x2,y2,img1,img2,x_t,y_t,scale)
-
-    % SCALE THEN ADD X, Y TRANSLATION
-    img2 = imresize(img2, scale);
+function [ F ] = getGradientMagnitude( x1,y1,x2,y2,img1,img2,x_t,y_t)
     
     cform = makecform('srgb2lab');
     lab1 = applycform(img1,cform);

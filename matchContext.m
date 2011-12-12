@@ -19,8 +19,10 @@ TEXTURE_ERROR = 1;
 disp('reading files...');
 
 %read files
-match = imread(matchimg);
-input = imread(inputimg);
+% match = imread(matchimg);
+% input = imread(inputimg);
+match = matchimg;
+input = inputimg;
 insize = size(input);
 
 disp('building context mask...');
@@ -66,9 +68,13 @@ disp('finding minimum ssd...');
 minSSD = -1;
 sz = size(VALID_SCALE);
 
+cform = makecform('srgb2lab');
+input = applycform(input,cform);
 
 for i=1:sz(2)
     scl = imresize(match, VALID_SCALE(i));
+    match = applycform(match,cform);
+
     sclsz = size(scl);
     progress=1;
     items = (c_x(1)-c_x(2)+sclsz(1))*(c_y(1)-c_y(2)+sclsz(2));

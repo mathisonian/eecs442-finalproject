@@ -1,4 +1,4 @@
-function SSD = getContextTFilt(match,xt,yt,input,context)
+function SSD = getContextTFilt(m_l,xt,yt,i_l,context)
 %compute texture filter and ssd
 SSD = 0;
 %median filter size
@@ -6,10 +6,6 @@ FILT_SIZE = 5;
 
 %match = medfilt2(match, [FILT_SIZE FILT_SIZE]);
 %input = medfilt2(input, [FILT_SIZE FILT_SIZE]);
-
-cform = makecform('srgb2lab');
-m_l = applycform(match,cform);
-i_l = applycform(input,cform);
 
 m_l(:,:,1) = medfilt2(m_l(:,:,1), [FILT_SIZE FILT_SIZE]);
 m_l(:,:,2) = medfilt2(m_l(:,:,2), [FILT_SIZE FILT_SIZE]);
@@ -19,7 +15,7 @@ i_l(:,:,1) = medfilt2(i_l(:,:,1), [FILT_SIZE FILT_SIZE]);
 i_l(:,:,2) = medfilt2(i_l(:,:,2), [FILT_SIZE FILT_SIZE]);
 i_l(:,:,3) = medfilt2(i_l(:,:,3), [FILT_SIZE FILT_SIZE]);
 
-sz = size(input);
+sz = size(i_l);
 
 for i=1:sz(1)
     for j=1:sz(2)

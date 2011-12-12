@@ -1,4 +1,4 @@
-function [ adjMatrix ] = createAdjacencyMatrix(img, match, context, mask, x_t, y_t, scale)
+function [ adjMatrix ] = createAdjacencyMatrix(img, match, context, mask, x_t, y_t)
 
     s = size(context);
     w = s(1);
@@ -26,7 +26,7 @@ function [ adjMatrix ] = createAdjacencyMatrix(img, match, context, mask, x_t, y
                 % test pixel to the left
                 if context(i-1,j) == 1
                     % create edge p->q
-                    adjMatrix(contextMap(i,j),contextMap(i-1,j)) = getGradientMagnitude(i,j,i-1,j, img, match, x_t, y_t, scale);
+                    adjMatrix(contextMap(i,j),contextMap(i-1,j)) = getGradientMagnitude(i,j,i-1,j, img, match, x_t, y_t);
                 elseif mask(i-1,j) == 0 
                     % create edge p->hole
                     adjMatrix(contextMap(i,j),hole) = Inf;
@@ -38,7 +38,7 @@ function [ adjMatrix ] = createAdjacencyMatrix(img, match, context, mask, x_t, y
                 % test pixel above
                 if context(i, j-1) == 1
                     % create edge p->q
-                    adjMatrix(contextMap(i,j),contextMap(i,j-1)) = getGradientMagnitude(i,j,i,j-1, img, match, x_t, y_t, scale);
+                    adjMatrix(contextMap(i,j),contextMap(i,j-1)) = getGradientMagnitude(i,j,i,j-1, img, match, x_t, y_t);
                 elseif mask(i,j-1) == 0 
                     % create edge p->hole
                     adjMatrix(contextMap(i,j),hole) = Inf;
@@ -49,7 +49,7 @@ function [ adjMatrix ] = createAdjacencyMatrix(img, match, context, mask, x_t, y
                 % test pixel to the right
                 if context(i+1, j) == 1
                     % create edge p->q
-                    adjMatrix(contextMap(i,j),contextMap(i+1,j)) = getGradientMagnitude(i,j,i+1,j, img, match, x_t, y_t, scale);
+                    adjMatrix(contextMap(i,j),contextMap(i+1,j)) = getGradientMagnitude(i,j,i+1,j, img, match, x_t, y_t);
                 elseif mask(i+1,j) == 0 
                     % create edge p->hole
                     adjMatrix(contextMap(i,j),hole) = Inf;
@@ -60,7 +60,7 @@ function [ adjMatrix ] = createAdjacencyMatrix(img, match, context, mask, x_t, y
                 % test pixel below
                 if context(i, j+1) == 1
                     % create edge p->q
-                    adjMatrix(contextMap(i,j),contextMap(i,j+1)) = getGradientMagnitude(i,j,i,j+1, img, match, x_t, y_t, scale);
+                    adjMatrix(contextMap(i,j),contextMap(i,j+1)) = getGradientMagnitude(i,j,i,j+1, img, match, x_t, y_t);
                 elseif mask(i,j+1) == 0 
                     % create edge p->hole
                     adjMatrix(contextMap(i,j),hole) = Inf;
