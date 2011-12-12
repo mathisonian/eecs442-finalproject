@@ -8,10 +8,13 @@ disp('beginning context match...');
 CONTEXT_RADIUS = 80;
 
 %valid scales that can be applied to the match image
-VALID_SCALE = ([.81,.90,1]);
-
+%VALID_SCALE = ([.81,.90,1]);
+VALID_SCALE = ([.81,1])
 %scales the translational error
 TRANSLATE_ERROR = 1;
+
+%amount of pixels to increment at each translation
+PIXEL_JUMP = 5;
 
 %scales the texture descriptor error
 TEXTURE_ERROR = 1;
@@ -33,6 +36,7 @@ context = zeros(insize(1),insize(2));
 %boundaries of context
 c_x = ([-1 -1]);
 c_y = ([-1 -1]);
+
 
 for i=1:insize(1)
     for j=1:insize(2)
@@ -74,14 +78,11 @@ input = applycform(input,cform);
 for i=1:sz(2)
     scl = imresize(match, VALID_SCALE(i));
     match = applycform(match,cform);
-
     sclsz = size(scl);
-    progress=1;
-    items = (c_x(1)-c_x(2)+sclsz(1))*(c_y(1)-c_y(2)+sclsz(2));
-    for xt=(c_x(2)-sclsz(1)):(c_x(1)-1)
-        for yt=(c_y(2)-sclsz(2)):(c_y(1)-1)      
-                disp([num2str(progress), ' out of ',num2str(items)]);
-                progress = progress + 1;
+    xt=(c_x(2)-sclsz(1));
+    while(xt<=(c_x(1)-1))
+        yt=(c_y(2)-sclsz(2));
+        while(yt<=(c_y(1)-1))      
                 x = getContextSSD(scl,xt,yt,input,context);
                 x = x + xt*TRANSLATE_ERROR + yt*TRANSLATE_ERROR;
                 x = x + TEXTURE_ERROR*getContextTFilt(scl,xt,yt,input,context);
@@ -90,7 +91,9 @@ for i=1:sz(2)
                     minSSD=x;
                     context_match = struct('x_t',xt,'y_t',yt,'scale',VALID_SCALE(i),'context_mask',context);       
                 end
+                yt = yt + PIXEL_JUMP;
         end
+        xt = xt + PIXEL_JUMP;
     end
 end
 end
