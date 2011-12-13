@@ -16,8 +16,8 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
     end
     
     %translate source image
-    source = zeros(width,height);
-    source(xt+1:width,yt+1:height) = src(1:width-xt,1:height-yt);
+    %source = zeros(width,height);
+    %source(xt+1:width,yt+1:height) = src(1:width-xt,1:height-yt);
     
     %sparse matrix
     A = spalloc(N,N,5*N);
@@ -37,7 +37,7 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
     end
     
     %apply laplacian operator
-    source = conv2(source, -laplacian, 'same');
+    src = conv2(src, -laplacian, 'same');
     
     %iterate through A
     cnt=0;
@@ -75,7 +75,8 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
                     b(cnt) = b(cnt) + tgt(i-1,j);
                 end
                 %add guidance vector field
-                b(cnt) = b(cnt) + source(i,j);
+                b(cnt) = b(cnt) + src(i-xt,j-yt);
+                
             end
         end
     end
