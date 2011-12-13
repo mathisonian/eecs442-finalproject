@@ -1,23 +1,18 @@
-function [ finalimg ] = poissonBlend(img,context,selection)
+function [ finalimg ] = poissonBlend(source,target,context,selection,x,y)
 
 %solve independently for each color channel
 
-%find edges of context, denote by '3'
-for i=1:size(context,1)
-    for j=1:size(context,2)
-        if(context(i,j)==1)
-            if(context(i,j+1)==2 || context(i,j-1)==2 || context(i+1,j)==2 || context(i-1,j)==2)
-                context(i,j)=3;
-            end
-        end
-    end
-end
+f1 = solvePoisson2(source(:,:,1),target(:,:,1),context,selection,x,y);
+f2 = solvePoisson2(source(:,:,2),target(:,:,2),context,selection,x,y);
+f3 = solvePoisson2(source(:,:,3),target(:,:,3),context,selection,x,y);
 
-img(:,:,1) = solvePoisson(img(:,:,1),context,selection);
-img(:,:,2) = solvePoisson(img(:,:,2),context,selection);
-img(:,:,3) = solvePoisson(img(:,:,3),context,selection);
+[x y z] = size(target);
 
-finalimg = img;
+finalimg = zeros(x,y,3);
+
+finalimg(:,:,1) = f1;
+finalimg(:,:,2) = f2;
+finalimg(:,:,3) = f3;
 
 end
 
