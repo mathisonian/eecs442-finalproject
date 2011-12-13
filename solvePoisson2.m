@@ -1,6 +1,8 @@
 function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
 
+    %laplacian operator
     laplacian = [0 1 0; 1 -4 1; 0 1 0];
+    
     [width height] = size(tgt);
     
     %number of pixels in source
@@ -15,11 +17,7 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
         end
     end
     
-    %translate source image
-    %source = zeros(width,height);
-    %source(xt+1:width,yt+1:height) = src(1:width-xt,1:height-yt);
-    
-    %sparse matrix
+    %allocate sparse matrix
     A = spalloc(N,N,5*N);
     %boundary conditions
     b = zeros(1,N);
@@ -37,7 +35,7 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
     end
     
     %apply laplacian operator
-    src = conv2(src, -laplacian, 'same');
+    src = conv2(double(src), -laplacian, 'same');
     
     %iterate through A
     cnt=0;
@@ -87,7 +85,7 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
     %x = lscov(A,b);
     
     out = tgt;
-    
+    %build output image
     for i=1:width
         for j=1:height
             if(select(i,j)==0 || context(i,j)==2)
