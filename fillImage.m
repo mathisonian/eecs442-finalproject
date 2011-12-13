@@ -21,7 +21,7 @@ function [ output_args ] = fillImage(img, dir)
         for i=1:size(cutMask,1)
             for j=1:size(cutMask,2)
                 if cutMask(i,j) > 1
-                    completedImg(i,j,:) = matchImg(i+context_match.x_t,j+context_match.y_t,:);
+                    completedImg(i,j,:) = matchImg(i-context_match.x_t,j-context_match.y_t,:);
                 end
             end
         end
