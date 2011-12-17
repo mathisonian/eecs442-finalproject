@@ -1,5 +1,15 @@
 function [ cutMask ] = graphCut( adjMatrix, contextMap )
     
+
+    labels = zeros(1, size(adjMatrix,1) - 2);
+    
+    % Loop over the original and hole rows, 
+    % and the non-zero's should be labeled appropriately.
+    %
+    % for 
+    %    
+    % end
+
     % Remove the sink/source info
     adjMatrix = adjMatrix(1:end-2,1:end-2);
     
@@ -22,10 +32,6 @@ function [ cutMask ] = graphCut( adjMatrix, contextMap )
                     normalized(:,j) = zeros(w,1);
                     normalized(j,:) = zeros(1,h);
                     normalized(i,i) = 0;
-                    
-                    % Store in i that we added j to it
-                    contractPointers{i} = [contractPointers{i}, contractPointers{j}, j];
-                    contractPointers{j} = [];
                     
                     contracted = 1;
                     break;

@@ -129,5 +129,7 @@ function [ adjMatrix ] = createAdjacencyMatrix(img, match, context, mask, x_t, y
         end 
     end
 
+    adjMatrix = sparse(iMat,jMat,sMat);
+    
 end
 

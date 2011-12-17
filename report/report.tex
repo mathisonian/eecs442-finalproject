@@ -1,0 +1,54 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\setcounter{secnumdepth}{5}
+
+\title{Brief Article}
+\author{Matthew Conlen \and Michael Gisi }
+\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+write the abstract here. 
+\end{abstract}
+
+\section{Introduction}
+
+Write the introduction here.  introduce the problem you want to solve, expain why it is important to solve it; and indicate the method you used to solve it. add a concept figure showing the overall idea behind the method you are presenting. You can cite like this \cite{Tsats}, using entries from the bibliography.bib file.
+
+\section{This Section Should Have a Name} 
+\subsection{Previous Work}
+Review of previous work (i.e. previous methods that have explored a similar problem)
+
+\subsection{Our Method}
+Say why your method is better than previous work; and/or summarize the key main contributions of your work; 
+
+\section{Technical}
+
+\subsection{Technical Summary}
+Technical part: Summary of the technical solution 
+
+\subsection{Technical Details}
+Technical part: Details of the technical solution; you may want to decompose this section into several subsections; add figures to help your explanation. 
+\subsubsection{Scene Completion Algorithm}
+blah blah blah
+
+\paragraph{\sc Semantic Matching} 
+another subsection
+
+\subsubsection{Dynamic Resizing}
+
+
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+\end{document}  

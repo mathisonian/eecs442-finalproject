@@ -2,8 +2,8 @@ function [ matches, imgMask ] = getMatchingImages( img, indir )
     
     GIST_WEIGHT_CONSTANT = 2;
     COLOR_WEIGHT_CONSTANT = 1;
-    NUM_MATCHES = 100;
-    gists = cell(1,1000000);
+    NUM_MATCHES = 25;
+%     gists = cell(1,1000000);
     imgs = cell(1,1000000);
     NUM_IMAGES = getNumImages(indir, 0)
 
@@ -13,9 +13,10 @@ function [ matches, imgMask ] = getMatchingImages( img, indir )
     tic
     diffs = zeros(1,NUM_IMAGES);
     parfor i=1:NUM_IMAGES
-        testGist = gists{i};
-        testImg = imread(imgs{i});
-        gistSSD = getSSD(imgGist, testGist);
+%         testGist = gists{i};
+        testGist = load([imgs{i} '.gist'], '-mat');
+%         testImg = imread(imgs{i});
+        gistSSD = getSSD(imgGist, testGist.gist);
 %         disp('getting color ssd');
 %         colorSSD = getColorDiff(img, testImg);
         diffs(i) = GIST_WEIGHT_CONSTANT*gistSSD;
@@ -37,13 +38,14 @@ function [ matches, imgMask ] = getMatchingImages( img, indir )
         for j=3:size(d)
             n = [indir '/' d(j).name];
             if(d(j).isdir)
-                count = count + getNumImages(n, count);
+                disp(n);
+                count = getNumImages(n, count);
             else
                 [a,b,c]=fileparts(n);
                 if(strcmp(c,'.gist'))
                     count = count+1;
-                    g = load(n, '-mat');
-                    gists{count} = g.gist;
+%                     g = load(n, '-mat');
+%                     gists{count} = g.gist;
                     imgs{count} = n(1:end-5);
                 end
             end
