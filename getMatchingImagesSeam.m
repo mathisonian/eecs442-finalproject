@@ -28,7 +28,7 @@ function [ matches, imgMask, img ] = getMatchingImagesSeam( img, indir, extendVa
     seamMask = getSeam(img, 0);
     origSize = size(img,1);
     img = [img; zeros(extendValy, size(img,2), 3)];
-    imgMask = [imgMask; ones(size(img,1), size(img,2));
+    imgMask = [imgMask; ones(size(img,1), size(img,2))];
     for x=1:size(seamMask,1)
         for y=1:size(seamMask,2)
             if seamMask(x,y) == 1
