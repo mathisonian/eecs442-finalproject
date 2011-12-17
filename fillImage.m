@@ -1,7 +1,11 @@
-function [ outImgs ] = fillImage(img, dir)
+function [ outImgs ] = fillImage(img, dir, rx, ry)
 
     disp('beginning getMatchingImages...');
-    [matches, imgMask] = getMatchingImages(img, dir);
+    if(rx==0 && ry==0)
+        [matches, imgMask] = getMatchingImages(img, dir);
+    else
+        [matches, imgMask] = getMatchingImagesSeam(img, dir, rx, ry);
+    end
     disp('done with matching images');
 %     count = 0;
     size(matches,2)

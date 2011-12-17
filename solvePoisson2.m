@@ -3,6 +3,7 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
     %laplacian operator
     laplacian = [0 1 0; 1 -4 1; 0 1 0];
     
+    %get size of target image
     [width height] = size(tgt);
     
     %number of pixels in source
@@ -46,36 +47,36 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
                 A(cnt,cnt) = 4;
                 %check for neighbors
                 if(j<height)
-                if(select(i,j+1) == 0 || context(i,j+1) == 2)
-                    p = c2v(i,j+1);
-                    A(cnt, p) = -1;
-                else
-                    b(cnt) = b(cnt) + tgt(i,j+1);
-                end
+                    if(select(i,j+1) == 0 || context(i,j+1) == 2)
+                        p = c2v(i,j+1);
+                        A(cnt, p) = -1;
+                    else
+                        b(cnt) = b(cnt) + tgt(i,j+1);
+                    end
                 end
                 if(j>1)
-                if(select(i,j-1) == 0 || context(i,j-1) == 2)
-                    p = c2v(i,j-1);
-                    A(cnt, p) = -1;
-                else
-                    b(cnt) = b(cnt) + tgt(i,j-1);
-                end
+                    if(select(i,j-1) == 0 || context(i,j-1) == 2)
+                        p = c2v(i,j-1);
+                        A(cnt, p) = -1;
+                    else
+                        b(cnt) = b(cnt) + tgt(i,j-1);
+                    end
                 end
                 if(i<width)
-                if(select(i+1,j) == 0 || context(i+1,j) == 2)
-                    p = c2v(i+1,j);
-                    A(cnt, p) = -1;
-                else
-                    b(cnt) = b(cnt) + tgt(i+1,j);
-                end
+                    if(select(i+1,j) == 0 || context(i+1,j) == 2)
+                        p = c2v(i+1,j);
+                        A(cnt, p) = -1;
+                    else
+                        b(cnt) = b(cnt) + tgt(i+1,j);
+                    end
                 end
                 if(i>1)
-                if(select(i-1,j) == 0 || context(i-1,j) == 2)
-                    p = c2v(i-1,j);
-                    A(cnt, p) = -1;
-                else
-                    b(cnt) = b(cnt) + tgt(i-1,j);
-                end
+                    if(select(i-1,j) == 0 || context(i-1,j) == 2)
+                        p = c2v(i-1,j);
+                        A(cnt, p) = -1;
+                    else
+                        b(cnt) = b(cnt) + tgt(i-1,j);
+                    end
                 end
                 %add guidance vector field
                 b(cnt) = b(cnt) + src(i-xt,j-yt);

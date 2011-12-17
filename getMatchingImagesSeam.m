@@ -1,4 +1,4 @@
-function [ matches, imgMask ] = getMatchingImagesSeam( img, indir, extendVal )
+function [ matches, imgMask, img ] = getMatchingImagesSeam( img, indir, extendValx, extendValy )
     
     GIST_WEIGHT_CONSTANT = 2;
     COLOR_WEIGHT_CONSTANT = 1;
@@ -9,17 +9,33 @@ function [ matches, imgMask ] = getMatchingImagesSeam( img, indir, extendVal )
 
     seamMask = getSeam(img, 1);
     origSize = size(img,2);
-    img = [img zeros(size(img,1), extendVal, 3)];
+    img = [img zeros(size(img,1), extendValx, 3)];
     imgMask = ones(size(img,1), size(img,2));
     for x=1:size(seamMask,1)
         for y=1:size(seamMask,2)
             if seamMask(x,y) == 1
                 img(x,end-(origSize-y):end,:) = img(x,y:origSize,:);
-                img(x,y:y+extendVal-1,:) = zeros(1,extendVal,3);
-                imgMask(x,y:y+extendVal-1,:) = zeros(1,extendVal);
+                img(x,y:y+extendValx-1,:) = zeros(1,extendValx,3);
+                imgMask(x,y:y+extendValx-1,:) = zeros(1,extendValx);
             end
         end
     end
+    
+    seamMask = getSeam(img, 0);
+    origSize = size(img,1);
+    img = [img; zeros(extendValy, size(img,2), 3)];
+    imgMask = [imgMask; ones(size(img,1), size(img,2));
+    for x=1:size(seamMask,1)
+        for y=1:size(seamMask,2)
+            if seamMask(x,y) == 1
+                img(end-(origSize-x):end,y,:) = img(x:origSize,y,:);
+                img(x:x+extendValy-1,y,:) = zeros(extendValy,1,3);
+                imgMask(x:x+extendValy-1,y,:) = zeros(extendValy,1);
+            end
+        end
+    end
+                
+                
     
     imshow(img);
     
