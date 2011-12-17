@@ -49,7 +49,7 @@ function [ seamMask ] = getSeam( img, isVertical )
             if index == 1
                 [C,I] = min(dpArray(index:index+1,j));
                 index = (index-1) + I(1);
-            elseif index == w
+            elseif index == h
                 [C,I] = min(dpArray(index-1:index,j));
                 index = (index-2) + I(1);    
             else

@@ -16,11 +16,10 @@ function [ matches, imgMask, img ] = getMatchingImagesSeam( img, indir, extendVa
             if seamMask(x,y) == 1
                 img(x,end-(origSize-y):end,:) = img(x,y:origSize,:);
 
-                
-                img(x,y:y+extendVal-1,1) = img(x,y,1);
-                img(x,y:y+extendVal-1,2) = img(x,y,2);
-                img(x,y:y+extendVal-1,3) = img(x,y,3);
-                imgMask(x,y:y+extendVal-1,:) = zeros(1,extendVal);
+                img(x,y:y+extendValx-1,1) = img(x,y,1);
+                img(x,y:y+extendValx-1,2) = img(x,y,2);
+                img(x,y:y+extendValx-1,3) = img(x,y,3);
+                imgMask(x,y:y+extendValx-1,:) = zeros(1,extendValx);
             end
         end
     end
@@ -33,7 +32,10 @@ function [ matches, imgMask, img ] = getMatchingImagesSeam( img, indir, extendVa
         for y=1:size(seamMask,2)
             if seamMask(x,y) == 1
                 img(end-(origSize-x):end,y,:) = img(x:origSize,y,:);
-                img(x:x+extendValy-1,y,:) = zeros(extendValy,1,3);
+                img(x:x+extendValy-1,y,1) = img(x,y,1);
+                img(x:x+extendValy-1,y,2) = img(x,y,2);
+                img(x:x+extendValy-1,y,3) = img(x,y,3);
+                
                 imgMask(x:x+extendValy-1,y,:) = zeros(extendValy,1);
             end
         end
