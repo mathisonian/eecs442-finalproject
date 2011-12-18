@@ -25,7 +25,7 @@ function [ out ] = solvePoisson2(hotfix,src,tgt,context,select,xt,yt)
                 cnt = cnt+1;
                 c2v(i,j) = cnt;
                 N = N+1;
-            else
+            elseif(hotfix==1)
                 edgefound = 0;
                 if(j<height)
                     if(select(i,j+1) == 0 || context(i,j+1) == 2)
@@ -65,8 +65,9 @@ function [ out ] = solvePoisson2(hotfix,src,tgt,context,select,xt,yt)
             end
         end
     end
-    
-    pav = pav/edgepixels;
+    if(hotfix==1)
+        pav = pav/edgepixels;
+    end
     
     %allocate sparse matrix
     A = spalloc(N,N,5*N);
@@ -94,7 +95,7 @@ function [ out ] = solvePoisson2(hotfix,src,tgt,context,select,xt,yt)
                 else
                     if(hotfix==1)
                         b(cnt) = b(cnt) + pav;
-                    else
+                    elseif(hotfix==0)
                         b(cnt) = b(cnt) + tgt(i,j);
                     end
                 end
@@ -108,7 +109,7 @@ function [ out ] = solvePoisson2(hotfix,src,tgt,context,select,xt,yt)
                 else
                     if(hotfix==1)
                         b(cnt) = b(cnt) + pav;
-                    else
+                    elseif(hotfix==0)
                         b(cnt) = b(cnt) + tgt(i,j);
                     end
                 end
@@ -122,7 +123,7 @@ function [ out ] = solvePoisson2(hotfix,src,tgt,context,select,xt,yt)
                 else
                     if(hotfix==1)
                         b(cnt) = b(cnt) + pav;
-                    else
+                    elseif(hotfix==0)
                         b(cnt) = b(cnt) + tgt(i,j);
                     end
                 end
@@ -136,7 +137,7 @@ function [ out ] = solvePoisson2(hotfix,src,tgt,context,select,xt,yt)
                 else
                     if(hotfix==1)
                         b(cnt) = b(cnt) + pav;
-                    else
+                    elseif(hotfix==0)
                         b(cnt) = b(cnt) + tgt(i,j);
                     end
                 end
