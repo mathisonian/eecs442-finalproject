@@ -18,14 +18,25 @@
 \maketitle
 
 \begin{abstract}
-write the abstract here. 
+The problem of scene completion has received a lot of attention in recent computer vision research. We 
+look at a solution proposed by Hays and Effros \cite{Hays:2007}. We provide our own implementation of the
+algorithm proposed in \cite{Hays:2007} and examine the results. We also propose a method of using this 
+scene completion algorithm to dynamically resize images using the seam carving algorithm
+given by Avidan and Shamir \cite{Avidan:2007}. We consider the benefits and drawbacks that are associated with the previously mentioned methods of scene completion and image resizing. These methods are computationally expensive and rely on a local database of millions of images to achieve satisfactory results. This makes the algorithm intractable for widespread use, but we consider possible remedies for this in our future work section. 
+ 
 \end{abstract}
 
 \section{Introduction}
 
-Write the introduction here.  introduce the problem you want to solve, expain why it is important to solve it; and indicate the method you used to solve it. add a concept figure showing the overall idea behind the method you are presenting. You can cite like this \cite{Hays:2007, Karger:1992, Avidan:2007, Torralba:2006, Perez:2003}, using entries from the bibliography.bib file.
+In this paper we consider an algorithm for scene completion based on work by Hays and Effros \cite{Hays:2007}. This algorithm allows a user to select an area of a picture and then algorithmically fills that area in with different visual content from another image. This is a difficult problem because the content that is added to the image must look as if it was part of the image originally. 
 
-\section{Background} 
+There are many reasons why a person would wish to remove part of an image. For example, perhaps some passers-by have entered into the background and ruined an otherwise beautiful image. It may be the case that a person is in the photograph who has fallen out of favor (e.g. an ex-girlfriend), or maybe there is politically incendiary content that needs to be removed \cite{King:1997}. As further evidence that this problem is relevant outside of the academic world, Adobe Photoshop CS5 (the most recent version of the popular image editing software at time of writing ) features a new tool called ``Content-Aware Fill'' that allows users to remove certain areas from their images \cite{Barnes:2009}. 
+
+The scene completion method presented by Hays and Effros is designed to take advantage of the plethora of data currently available on the internet. The intuition behind the algorithm is to compile a large database of images and then, when it is time to do scene completion, try using a subset of these images that is semantically close to the original. For each image in this subset, its optimal scale and position is calculated and then the relevant area of that image is pasted into the original scene. Some post processing is done to make the entire scene look more natural. As the size of the image database is increased, so will the believability of the scene completion.
+
+We also consider the problem of image resizing. One may wish to change the aspect ratio of an image without stretching or compressing the content of the image. We propose a new method of dynamic resizing based on the method of seam carving presented by Avidan and Shamir \cite{Avidan:2007}. We carve a seam and then insert an image mask along that seam. This allows us to essentially cut the image in half along the seam and pull it apart. The scene completion algorithm then fills in the empty area around the seam with semantically relevant content. 
+
+\section{Overview} 
 \subsection{Previous Work}
 Review of previous work (i.e. previous methods that have explored a similar problem)
 
@@ -63,11 +74,13 @@ The problem then is to identify the border which will make the match look the mo
 	\right.
 \end{displaymath}
 
-where $i,j$ are pixels, $\triangledown diff(i,j)$ is the magnitude of the gradient of the SSD between the images, and $k \approx .002$ is an empirical constant presented by Wilczkowiak, et. al. \cite{Gabriel:2005}. This takes into account the visual cost of having these two pixels be from different images and also adds a penalty for pixels as they are farther away from the hole area.
+where $i,j$ are adjacent pixels, $\triangledown diff(i,j)$ is the magnitude of the gradient of the SSD between the images, and $k \approx .002$ is an empirical constant presented by Wilczkowiak, et. al. \cite{Gabriel:2005}. This takes into account the visual cost of having these two pixels be from different images and also adds a penalty for pixels as they are farther away from the hole area.
 
 
 We use the algorithm proposed by Karger \cite{Karger:1992} to find the minimum graph cut, and hence the label for each pixel in the context area. Karger's algorithm is relatively straightfoward
 
+
+PUT THE ALGORITHM HERE
 
 \paragraph{\sc Poisson Blending}
 
