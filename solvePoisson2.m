@@ -1,4 +1,4 @@
-function [ out ] = solvePoisson2(hotfix, src,tgt,context,select,xt,yt)
+function [ out ] = solvePoisson2(hotfix,src,tgt,context,select,xt,yt)
 
     %laplacian operator
     laplacian = [0 1 0; 1 -4 1; 0 1 0];
@@ -29,8 +29,8 @@ function [ out ] = solvePoisson2(hotfix, src,tgt,context,select,xt,yt)
                 edgefound = 0;
                 if(j<height)
                     if(select(i,j+1) == 0 || context(i,j+1) == 2)
-                        pav = pav+tgt(i,j);
                         if(edgefound == 0)
+                            pav = pav+tgt(i,j);
                             edgepixels = edgepixels + 1;
                             edgefound = 1;
                         end
@@ -38,8 +38,8 @@ function [ out ] = solvePoisson2(hotfix, src,tgt,context,select,xt,yt)
                 end
                 if(j>1)
                     if(select(i,j-1) == 0 || context(i,j-1) == 2)
-                        pav = pav+tgt(i,j);
                         if(edgefound == 0)
+                            pav = pav+tgt(i,j);
                             edgepixels = edgepixels + 1;
                             edgefound = 1;
                         end
@@ -47,8 +47,8 @@ function [ out ] = solvePoisson2(hotfix, src,tgt,context,select,xt,yt)
                 end
                 if(i<width)
                     if(select(i+1,j) == 0 || context(i+1,j) == 2)
-                        pav = pav+tgt(i,j);
                         if(edgefound == 0)
+                            pav = pav+tgt(i,j);
                             edgepixels = edgepixels + 1;
                             edgefound = 1;
                         end
@@ -56,8 +56,8 @@ function [ out ] = solvePoisson2(hotfix, src,tgt,context,select,xt,yt)
                 end
                 if(i>1)
                     if(select(i-1,j) == 0 || context(i-1,j) == 2)
-                        pav = pav+tgt(i,j);
                         if(edgefound == 0)
+                            pav = pav+tgt(i,j);
                             edgepixels = edgepixels + 1;
                         end
                     end
