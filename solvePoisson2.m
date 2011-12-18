@@ -1,4 +1,4 @@
-function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
+function [ out ] = solvePoisson2(hotfix, src,tgt,context,select,xt,yt)
 
     %laplacian operator
     laplacian = [0 1 0; 1 -4 1; 0 1 0];
@@ -92,7 +92,11 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
                         b(cnt) = b(cnt) + tgt(i,j+1);
                     end
                 else
-                    b(cnt) = b(cnt) + pav;
+                    if(hotfix==1)
+                        b(cnt) = b(cnt) + pav;
+                    else
+                        b(cnt) = b(cnt) + tgt(i,j);
+                    end
                 end
                 if(j>1)
                     if(select(i,j-1) == 0 || context(i,j-1) == 2)
@@ -102,7 +106,11 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
                         b(cnt) = b(cnt) + tgt(i,j-1);
                     end
                 else
-                    b(cnt) = b(cnt) + pav;
+                    if(hotfix==1)
+                        b(cnt) = b(cnt) + pav;
+                    else
+                        b(cnt) = b(cnt) + tgt(i,j);
+                    end
                 end
                 if(i<width)
                     if(select(i+1,j) == 0 || context(i+1,j) == 2)
@@ -112,7 +120,11 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
                         b(cnt) = b(cnt) + tgt(i+1,j);
                     end
                 else
-                    b(cnt) = b(cnt) + pav;
+                    if(hotfix==1)
+                        b(cnt) = b(cnt) + pav;
+                    else
+                        b(cnt) = b(cnt) + tgt(i,j);
+                    end
                 end
                 if(i>1)
                     if(select(i-1,j) == 0 || context(i-1,j) == 2)
@@ -122,7 +134,11 @@ function [ out ] = solvePoisson2(src,tgt,context,select,xt,yt)
                         b(cnt) = b(cnt) + tgt(i-1,j);
                     end
                 else
-                    b(cnt) = b(cnt) + pav;
+                    if(hotfix==1)
+                        b(cnt) = b(cnt) + pav;
+                    else
+                        b(cnt) = b(cnt) + tgt(i,j);
+                    end
                 end
                 %add guidance vector field
                 b(cnt) = b(cnt) + src(i-xt,j-yt);
