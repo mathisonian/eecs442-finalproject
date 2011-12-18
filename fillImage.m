@@ -19,24 +19,25 @@ function [ outImgs ] = fillImage(img, dir, rx, ry)
         context_match = matchContext(matchImg, img, imgMask);
         toc
         if(context_match.valid==1)
-        matchImg = imresize(matchImg, context_match.scale);
-%         disp('beginning createAdj...');
-%         adjMatrix = createAdjacencyMatrix(img, matchImg, context_match.context_mask, imgMask, context_match.x_t, context_match.y_t);
-%         disp('beginning graphCut...');
-%         cutMask = graphCut(adjMatrix, context_match.context_match);
-        for i=1:size(completedImg,1)
-            for j=1:size(completedImg,2)
-                if imgMask(i,j) == 0
-                    completedImg(i,j,:) = matchImg(i-context_match.x_t,j-context_match.y_t,:);
+            matchImg = imresize(matchImg, context_match.scale);
+    %         disp('beginning createAdj...');
+    %         adjMatrix = createAdjacencyMatrix(img, matchImg, context_match.context_mask, imgMask, context_match.x_t, context_match.y_t);
+    %         disp('beginning graphCut...');
+    %         cutMask = graphCut(adjMatrix, context_match.context_match);
+            for i=1:size(completedImg,1)
+                for j=1:size(completedImg,2)
+                    if imgMask(i,j) == 0
+                        completedImg(i,j,:) = matchImg(i-context_match.x_t,j-context_match.y_t,:);
+                    end
                 end
             end
+            blendImg = poissonBlend(matchImg, completedImg, context_match.context_mask, imgMask,context_match.x_t,context_match.y_t);
+            outImgs{k} = blendImg;
+    %         figure
+    %         imshow(uint8(blendImg));
+        else
+            outImgs{k} = completedImg;
         end
-        blendImg = poissonBlend(matchImg, completedImg, context_match.context_mask, imgMask,context_match.x_t,context_match.y_t);
-        outImgs{k} = blendImg;
-%         figure
-%         imshow(uint8(blendImg));
-        end
-        outImgs{k} = completedImg;
     end
     
     for i=1:size(outImgs,2)
