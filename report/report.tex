@@ -49,6 +49,26 @@ another subsection
 
 \paragraph{\sc Graph Cut}
 
+Following the method of Hayes and Effros \cite{Hays:2007} we allow for dynamic expansion of the border around the area of the image which is to be replaced. That is, we allow the area to expand (up to 80 pixels in any direction) but not contract. The reasoning behind this is that it will allow for a more natural integration of the match image into the original image. Contraction of the area is not allowed because this could possibly cause specific objects that the user is trying to delete to remain in the image. 
+
+
+The problem then is to identify the border which will make the match look the most natural. This formulation can be reduced to a graph cut problem. We take each pixel in the context region (the 80 pixel buffer around the original selection) and treat it as a vertex on a graph. Then, we assign weights to each of the edges. The weights are based on the following formula
+
+\begin{displaymath}
+	w_{i,j} = \left\{ 
+		\begin{array}{lr}
+			\triangledown diff(i,j) + (k \cdot Dist(i,hole))^3 &  i,j \in context \\
+			0 &  otherwise
+		\end{array}
+	\right.
+\end{displaymath}
+
+where $i,j$ are pixels, $\triangledown diff(i,j)$ is the magnitude of the gradient of the SSD between the images, and $k \approx .002$ is an empirical constant presented by Wilczkowiak, et. al. \cite{Gabriel:2005}. This takes into account the visual cost of having these two pixels be from different images and also adds a penalty for pixels as they are farther away from the hole area.
+
+
+We use the algorithm proposed by Karger \cite{Karger:1992} to find the minimum graph cut, and hence the label for each pixel in the context area. Karger's algorithm is relatively straightfoward
+
+
 \paragraph{\sc Poisson Blending}
 
 \subsubsection{Dynamic Resizing}

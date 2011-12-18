@@ -4,7 +4,7 @@ function [ outImgs ] = fillImage(img, dir, rx, ry)
     if(rx==0 && ry==0)
         [matches, imgMask] = getMatchingImages(img, dir);
     else
-        [matches, imgMask] = getMatchingImagesSeam(img, dir, rx, ry);
+        [matches, imgMask, img] = getMatchingImagesSeam(img, dir, rx, ry);
     end
     disp('done with matching images');
 %     count = 0;
