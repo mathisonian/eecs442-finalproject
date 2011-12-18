@@ -75,6 +75,7 @@ sz = size(VALID_SCALE);
 cform = makecform('srgb2lab');
 input = applycform(input,cform);
 
+context_match = struct('valid',0);
 
 for i=1:sz(2)
     scl = imresize(match, VALID_SCALE(i));
@@ -93,7 +94,7 @@ for i=1:sz(2)
                 if(x<minSSD)
                     disp('low ssd found');
                     minSSD=x;
-                    context_match = struct('x_t',xt,'y_t',yt,'scale',VALID_SCALE(i),'context_mask',context);       
+                    context_match = struct('x_t',xt,'y_t',yt,'scale',VALID_SCALE(i),'context_mask',context,'valid',1);       
                 end
                 yt = yt + PIXEL_JUMP;
         end
