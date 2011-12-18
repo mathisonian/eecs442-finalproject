@@ -34,7 +34,7 @@ There are many reasons why a person would wish to remove part of an image. For e
 
 The scene completion method presented by Hays and Effros is designed to take advantage of the plethora of data currently available on the internet. The intuition behind the algorithm is to compile a large database of images and then, when it is time to do scene completion, try using a subset of these images that is semantically close to the original. For each image in this subset, its optimal scale and position is calculated and then the relevant area of that image is pasted into the original scene. Some post processing is done to make the entire scene look more natural. As the size of the image database is increased, so will the believability of the scene completion.
 
-We also consider the problem of image resizing. One may wish to change the aspect ratio of an image without stretching or compressing the content of the image. We propose a new method of dynamic resizing based on the method of seam carving presented by Avidan and Shamir \cite{Avidan:2007}. We carve a seam and then insert an image mask along that seam. This allows us to essentially cut the image in half along the seam and pull it apart. The scene completion algorithm then fills in the empty area around the seam with semantically relevant content. 
+We also consider the problem of image resizing. One may wish to change the aspect ratio of an image without stretching or compressing the content of the image. We propose a new method of dynamic resizing based on the method of seam carving presented by Avidan and Shamir \cite{Avidan:2007} that takes advantage of Hays and Effros' work on scene completion. We carve a seam and then insert an image mask along that seam. This allows us to essentially cut the image along the seam and pull it apart. The scene completion algorithm then fills in the empty area around the seam with semantically relevant content. 
 
 \section{Overview} 
 \subsection{Previous Work}
@@ -54,7 +54,12 @@ Technical part: Details of the technical solution; you may want to decompose thi
 blah blah blah
 
 \paragraph{\sc Semantic Matching} 
-another subsection
+
+Because the database of images is so large, it must be cut down to a relatively small subset of images before the local context matching can occur. If this were not the case, the algorithm would be computationally unfeasible (local context matching is the most expensive part of the process). 
+
+In order to find images in the database that are most likely to yield a good local match, we try to find images in the database that are most semantically similar to the original image. We take advantage of prior work by Torralba and Oliva to define semantic similarity \cite{Torralba:2006}. We measure semantic similarity of two images by comparing taking the SSD of the gist descriptors of each image. In accordance with findings in previous work, we use gist descriptors with 6 oriented edge responses at 5 scales aggregated to a
+4x4 spatial resolution \cite{Hays:2007}. We use the $n$ images that are semantically closest to the original
+for the local context matching step. 
 
 \paragraph{\sc Local Context Matching}
 
@@ -86,7 +91,52 @@ PUT THE ALGORITHM HERE
 
 \subsubsection{Dynamic Resizing}
 
+We use the seam finding algorithm proposed by Avidan and Shamir \cite{Avidan:2007} as the basis of our dynamic resizing algorithm. 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=.6]{seam.png}
+\caption{An optimal seam displayed on an image of a llama.}
+\label{llamaSeam}
+\end{center}
+\end{figure}
+
+
+We find the optimal seam  
+
+$$ 
+s^* = \min_s E(s) = \min_s \sum^n_{i=1} e(\mathbf{I}(s_i))
+$$
+
+where $\mathbf{I}(s_i)$ is the intensity of the image at $s_i$ and $e$ is an energy function defined as
+
+$$
+e(\mathbf{I}) + |\frac{\delta}{\delta x} \mathbf{I} | + | \frac{\delta}{\delta y} \mathbf{I} |
+$$ 
+
+The optimal seam can be computed efficiently by using dynamic programming. To do this, the cumulative energy function $M$ must be found for each pixel on the last row or column of the image (depending on
+whether the seam is vertical or horizontal). $M$ is defined for a vertical seam as
+
+$$
+M(i,j) = e(i,j) + \min(M(i-1,j-1), M(i-1, j), M(i-1, j+1))
+$$
+
+The definition of $M$ for horizontal seams is symmetric. Once this seam is computed, a user defined amount
+of empty pixels are inserted into the images along the seam, as seen in Figure \ref{llamaCut}. These empty pixels are used as an image mask, and the image is then passed as input to the scene completion algorithm.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=.45]{broken.png}
+\caption{An image cut along the optimal vertical seam and extended horizontally 200 pixels.}
+\label{llamaCut}
+\end{center}
+\end{figure}
+
+
 \section{Experiments}
+
+We should probably say something here about how there is no good metric for evaluation other
+than having humans look at the images
 
 \subsection{Preliminary Results ($\approx14000$ images)}
 
