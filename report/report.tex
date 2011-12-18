@@ -10,7 +10,7 @@
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 \setcounter{secnumdepth}{5}
 
-\title{Implementing a Scene Completion Algorithm with a Dynamic Image Resizing Extension}
+\title[Scene Completion and Image Resizing]{Implementing a Scene Completion Algorithm with a Dynamic Image Resizing Extension}
 \author{Matthew Conlen \\ Michael Gisi  \\ EECS 442 \\ University of Michigan}
 \date{}                                           % Activate to display a given date or no date
 
@@ -34,7 +34,23 @@ There are many reasons why a person would wish to remove part of an image. For e
 
 The scene completion method presented by Hays and Effros is designed to take advantage of the plethora of data currently available on the internet. The intuition behind the algorithm is to compile a large database of images and then, when it is time to do scene completion, try using a subset of these images that is semantically close to the original. For each image in this subset, its optimal scale and position is calculated and then the relevant area of that image is pasted into the original scene. Some post processing is done to make the entire scene look more natural. As the size of the image database is increased, so will the believability of the scene completion.
 
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=.6]{projectOverview.png}
+\caption{Overview of scene completion.}
+\label{llamaSeam}
+\end{center}
+\end{figure}
+
 We also consider the problem of image resizing. One may wish to change the aspect ratio of an image without stretching or compressing the content of the image. We propose a new method of dynamic resizing based on the method of seam carving presented by Avidan and Shamir \cite{Avidan:2007} that takes advantage of Hays and Effros' work on scene completion. We carve a seam and then insert an image mask along that seam. This allows us to essentially cut the image along the seam and pull it apart. The scene completion algorithm then fills in the empty area around the seam with semantically relevant content. 
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=.6]{seamOverview.png}
+\caption{Proposed resizing algorithm.}
+\label{llamaSeam}
+\end{center}
+\end{figure}
 
 \section{Overview} 
 \subsection{Previous Work}
@@ -135,14 +151,71 @@ of empty pixels are inserted into the images along the seam, as seen in Figure \
 
 \section{Experiments}
 
-We should probably say something here about how there is no good metric for evaluation other
-than having humans look at the images
+The best available metric for determining the success of this algorithm is to present the output images (the completed scenes) and let humans determine if they appear natural or not. Unfortunately there is no better way to quantize this than to distribute the output images to be judged by impartial test subjects \cite{Hays:2007}, but the time frame of this project did not allow for such experiments. Here we show output images, both good and bad, and provide commentary on them and how they display a strength or weakness of the algorithmm. Overall we found the algorithm to be relatively ineffective \emph{unless} there was a near exact match in the image database.
 
 \subsection{Preliminary Results ($\approx14000$ images)}
 
+We began testing the scene completion algorithm when we had built up a database of approximately fourteen thousand images. This is considerably less than the two million images used in \cite{Hays:2007}, but we wanted to test how much of a difference having more images made.
+
+\begin{figure}[h]
+\begin{center}$
+\begin{array}{ccc}
+\includegraphics[width=1.8in]{mask.png} &
+\includegraphics[width=1.8in]{filled.png} &
+\includegraphics[width=1.8in]{blended.png} 
+\end{array}$
+\end{center}
+\caption{Successful scene completion using only fourteen thousand images.}
+\label{llamaMatch}
+\end{figure}
+
+\begin{figure}[h]
+\begin{center}$
+\begin{array}{cc}
+\includegraphics[width=2.3in]{sailboat.jpg} &
+\includegraphics[width=2.3in]{fish2.png}
+\end{array}$
+\end{center}
+\caption{Semantically incorrect completion.}
+\label{badMatch}
+\end{figure}
+
+With a database this size, there was seldom a close enough match image to provide satisfactory results. We had success doing scene completion when we removed areas of the area that we heterogeneous in content (such as a patch of an image that was all one texture, e.g. a patch of grass), as in Figure \ref{llamaMatch}.
+
+
 \subsection{Further Results ($\approx100000$ images)} 
 
+Expanding our database to over one-hundred thousand images increased the robustness of 
+the scene completion algorithm. We were able to fill in more complex areas of an image, but
+it was still not perfect. The computational cost of this algorithm made it difficult given the time constraints, so we were not able to build a database as large as that of Hays and Effros. We believe 
+that these results show that we have produced a sound implementation of the algorithm that would
+continue to perform better as more images were added to the database.
+
 \subsection{Dynamic Resizing}
+
+Our results for dynamic image resizing using scene completion were unimpressive, but this must be due in part to the size of our database. The area of that needed to be filled in by the scene completion algorithm was particularly awkward if the user wanted to resize in both the horizontal and vertical directions. This made finding an accurate match image even more difficult. Results of resizing in only one direction showed more promise, but the area to complete was so large that they were not perfect. We believe that a much larger image database is necessary to get natural looking results for our proposed resizing algorithm.
+
+\begin{figure}[h]
+\begin{center}$
+\begin{array}{cc}
+\includegraphics[scale=.3]{mountains.png} &
+\includegraphics[scale=.3]{1resize.png}
+\end{array}$
+\end{center}
+\caption{Single direction resizing results.}
+\label{vertResize}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}$
+\begin{array}{cc}
+\includegraphics[scale=.3]{mountains.png} &
+\includegraphics[scale=.3]{resize1.png}
+\end{array}$
+\caption{Vertical and horizontal expansion.}
+\label{bothResize}
+\end{center}
+\end{figure}
 
 \section{Conclusion}
 
