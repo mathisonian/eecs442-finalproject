@@ -18,6 +18,7 @@ function [ outImgs ] = fillImage(img, dir, rx, ry)
         tic
         context_match = matchContext(matchImg, img, imgMask);
         toc
+        if(context_match.valid==1)
         matchImg = imresize(matchImg, context_match.scale);
 %         disp('beginning createAdj...');
 %         adjMatrix = createAdjacencyMatrix(img, matchImg, context_match.context_mask, imgMask, context_match.x_t, context_match.y_t);
@@ -34,6 +35,8 @@ function [ outImgs ] = fillImage(img, dir, rx, ry)
         outImgs{k} = blendImg;
 %         figure
 %         imshow(uint8(blendImg));
+        end
+        outImgs{k} = completedImg;
     end
     
     for i=1:size(outImgs,2)
