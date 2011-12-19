@@ -18,7 +18,7 @@
 \maketitle
 
 \begin{abstract}
-The problem of scene completion has received a lot of attention in recent computer vision research. We 
+The problem of scene completion has received much attention in recent computer vision research. We 
 look at a solution proposed by Hays and Effros \cite{Hays:2007}. We provide our own implementation of the
 algorithm proposed in \cite{Hays:2007} and examine the results. We also propose a method of using this 
 scene completion algorithm to dynamically resize images using the seam carving algorithm
@@ -32,23 +32,23 @@ In this paper we consider an algorithm for scene completion based on work by Hay
 
 There are many reasons why a person would wish to remove part of an image. For example, perhaps some passers-by have entered into the background and ruined an otherwise beautiful image. It may be the case that a person is in the photograph who has fallen out of favor (e.g. an ex-girlfriend), or maybe there is politically incendiary content that needs to be removed \cite{King:1997}. As further evidence that this problem is relevant outside of the academic world, Adobe Photoshop CS5 (the most recent version of the popular image editing software at time of writing ) features a new tool called ``Content-Aware Fill'' that allows users to remove certain areas from their images \cite{Barnes:2009}. 
 
-The scene completion method presented by Hays and Effros is designed to take advantage of the plethora of data currently available on the internet. The intuition behind the algorithm is to compile a large database of images and then, when it is time to do scene completion, try using a subset of these images that is semantically close to the original. For each image in this subset, its optimal scale and position is calculated and then the relevant area of that image is pasted into the original scene. Some post processing is done to make the entire scene look more natural. As the size of the image database is increased, so will the believability of the scene completion.
+The scene completion method presented by Hays and Effros is designed to take advantage of the plethora of data currently available on the internet. The intuition behind the algorithm is to compile a large database of images and then, when it is time to do scene completion, try using a subset of these images that is semantically close to the original. For each image in this subset, its optimal scale and position is calculated and then the relevant area of that image is pasted into the original scene. Some post processing is done to make the entire scene look more natural. This method is displayed graphically in Figure \ref{scene}. As the size of the image database is increased, so will the believability of the scene completion.
 
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[scale=.5]{projectOverview.png}
 \caption{Overview of scene completion.}
-\label{llamaSeam}
+\label{scene}
 \end{center}
 \end{figure}
 
-We also consider the problem of image resizing. One may wish to change the aspect ratio of an image without stretching or compressing the content of the image. We propose a new method of dynamic resizing based on the method of seam carving presented by Avidan and Shamir \cite{Avidan:2007} that takes advantage of Hays and Effros' work on scene completion. We carve a seam and then insert an image mask along that seam. This allows us to essentially cut the image along the seam and pull it apart. The scene completion algorithm then fills in the empty area around the seam with semantically relevant content. 
+We also consider the problem of image resizing. One may wish to change the aspect ratio of an image without stretching or compressing the content of the image. We propose a new method of dynamic resizing based on the method of seam carving presented by Avidan and Shamir \cite{Avidan:2007} that takes advantage of Hays and Effros' work on scene completion. We carve a seam and then insert an image mask along that seam. This allows us to essentially cut the image along the seam and pull it apart. The scene completion algorithm then fills in the empty area around the seam with semantically relevant content as shown in Figure \ref{resize}. 
 
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[scale=.5]{seamOverview.png}
 \caption{Proposed resizing algorithm.}
-\label{llamaSeam}
+\label{resize}
 \end{center}
 \end{figure}
 
@@ -92,6 +92,10 @@ for the local context matching step.
 
 \paragraph{\sc Local Context Matching}
 
+
+We follow the context matching method proposed by Hays and Efros.\cite{Hays:2007} Given the target image, a semantically similar source image, and a user-defined selection, we must find an optimal translation and scale of the source. The optimal fit is found by finding the minimum sum of squared distances error. The error is computed by finding the SSD of pixel values and the SSD of a 5x5 pixel median filter on both images which acts to match similar textures. The algorithm iterates over all possible translations and a range of scales to find the optimal fit. The exhaustive nature of this method is computationally taxing; it is only feasible to run the method on a small set of images.
+
+
 \paragraph{\sc Graph Cut}
 
 Following the method of Hayes and Effros \cite{Hays:2007} we allow for dynamic expansion of the border around the area of the image which is to be replaced. That is, we allow the area to expand (up to 80 pixels in any direction) but not contract. The reasoning behind this is that it will allow for a more natural integration of the match image into the original image. Contraction of the area is not allowed because this could possibly cause specific objects that the user is trying to delete to remain in the image. 
@@ -108,15 +112,21 @@ The problem then is to identify the border which will make the match look the mo
 	\right.
 \end{displaymath}
 
-where $i,j$ are adjacent pixels, $\triangledown diff(i,j)$ is the magnitude of the gradient of the SSD between the images, and $k \approx .002$ is an empirical constant presented by Wilczkowiak, et. al. \cite{Gabriel:2005}. This takes into account the visual cost of having these two pixels be from different images and also adds a penalty for pixels as they are farther away from the hole area.
-
-
-We use the algorithm proposed by Karger \cite{Karger:1992} to find the minimum graph cut, and hence the label for each pixel in the context area. Karger's algorithm is relatively straightfoward
-
-
-PUT THE ALGORITHM HERE
+where $i,j$ are adjacent pixels, $\triangledown diff(i,j)$ is the magnitude of the gradient of the SSD between the images, and $k \approx .002$ is an empirical constant presented by Wilczkowiak, et. al. \cite{Gabriel:2005}. This takes into account the visual cost of having these two pixels be from different images and also adds a penalty for pixels as they are farther away from the hole area. We use the algorithm proposed by Karger \cite{Karger:1992} to find the minimum graph cut, and hence the label for each pixel in the context area.
 
 \paragraph{\sc Poisson Blending}
+
+
+
+A method is needed to combine the target image and the source image given by the local context matching. Simply pasting the images together may result in a jarring transition with mismatching color values. Poisson blending alleviates this by operating on the source image gradient; a solution is found which minimizes the changes to the gradient while obeying boundary conditions which match the pixel values in the source on the edge of the context to the target image. The resulting image features a smooth transition with matching color values while preserving the contents of the source image.
+
+
+We use poisson blending as described in P$\acute{e}$rez et. al. \cite{Perez:2003} We define $f$ to be the unknown portion of the target image in the context $\Omega$. The known portion of the image is defined as $f^\ast$ and the gradient of the source image is defined as $v$. To successfully blend the images we must solve the following minimization problem:
+$$ \min_f \iint_\Omega|\nabla f-v|^{2} \;\mathrm{with}\; f|_{\partial\Omega} = f^{\ast}|_{\partial\Omega} $$
+$\nabla$ is the gradient operator and $\partial\Omega$ is the boundary of the context area. The above equation's solution is the unique solution to the following Poisson equation:
+$$\Delta f=\mathrm{div} v\;\mathrm{ over }\;\Omega\;\mathrm{  with}\;  f|_{\partial\Omega} = f^{\ast}|_{\partial\Omega}$$
+$\Delta f = \frac{\partial^{2} f}{\partial^{2}x^2}+\frac{\partial^{2}f}{\partial^{2}x^2}$ is the Laplacian operator and $\mathrm{div} v = \frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}$ is the divergence of the gradient $v=(u,v)$.
+
 
 \subsubsection{Dynamic Resizing}
 
@@ -193,7 +203,7 @@ We began testing the scene completion algorithm when we had built up a database 
 \label{badMatch}
 \end{figure}
 
-With a database this size, there was seldom a close enough match image to provide satisfactory results. We had success doing scene completion when we removed areas of the area that we heterogeneous in content (such as a patch of an image that was all one texture, e.g. a patch of grass), as in Figure \ref{llamaMatch}.
+With a database this size, there was seldom a close enough match image to provide satisfactory results. Occasionally we would get output images that were semantically incorrect yet still looked somewhat natural, as seen in Figure \ref{badMatch}. We had success doing scene completion when we removed areas of the area that we heterogeneous in content (such as a patch of an image that was all one texture, e.g. a patch of grass), as in Figure \ref{llamaMatch}.
 
 
 \subsection{Further Results ($\approx100000$ images)} 
