@@ -50,14 +50,16 @@ another subsection
 \paragraph{\sc Graph Cut}
 
 \paragraph{\sc Poisson Blending}
-A method is needed to combine the target image and the source image given by the local context matching. Simply pasting the images together may result in a jarring transition with mismatching color values. Poisson blending alleviates this operating on the source image gradient; a solution is found which minimizes the changes to the gradient while obeying boundary conditions which match the pixel values in the source on the edge of the context to the target image. The resulting image features a smooth transition with matching color values while preserving the contents of the source image.
 
 
-We use poisson blending as described in Perez et. al. \cite{Perez:2003} We define f to be the unknown portion of the target image in the domain (omega) to be filled in. The known portion of the image is defined as f* and the gradient of the source image is defined as v. To successfully blend the images we must minimize the squared distance between gradient of f and v while obeying the boundary conditions fdo = f*do:
-function thing
-blah is the gradient operator. The above equation's solution is the unique solution to the following Poisson equation:
-poisson thing
-blah is the Laplacian operator and divv is the divergence of the gradient v.
+A method is needed to combine the target image and the source image given by the local context matching. Simply pasting the images together may result in a jarring transition with mismatching color values. Poisson blending alleviates this by operating on the source image gradient; a solution is found which minimizes the changes to the gradient while obeying boundary conditions which match the pixel values in the source on the edge of the context to the target image. The resulting image features a smooth transition with matching color values while preserving the contents of the source image.
+
+
+We use poisson blending as described in P$\acute{e}$rez et. al. \cite{Perez:2003} We define $f$ to be the unknown portion of the target image in the context $\Omega$. The known portion of the image is defined as $f^\ast$ and the gradient of the source image is defined as $v$. To successfully blend the images we must solve the following minimization problem:
+$$ \min_f \iint_\Omega|\nabla f-v|^{2} \;\mathrm{with}\; f|_{\partial\Omega} = f^{\ast}|_{\partial\Omega} $$
+$\nabla$ is the gradient operator and $\partial\Omega$ is the boundary of the context area. The above equation's solution is the unique solution to the following Poisson equation:
+$$\Delta f=\mathrm{div} v\;\mathrm{ over }\;\Omega\;\mathrm{  with}\;  f|_{\partial\Omega} = f^{\ast}|_{\partial\Omega}$$
+$\Delta f = \frac{\partial^{2} f}{\partial^{2}x^2}+\frac{\partial^{2}f}{\partial^{2}x^2}$ is the Laplacian operator and $\mathrm{div} v = \frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}$ is the divergence of the gradient $v=(u,v)$.
 
 \subsubsection{Dynamic Resizing}
 
