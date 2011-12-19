@@ -46,12 +46,11 @@ blah blah blah
 another subsection
 
 \paragraph{\sc Local Context Matching}
+We follow the context matching method proposed by Hays and Efros.\cite{Hays:2007} Given the target image, a semantically similar source image, and a user-defined selection, we must find an optimal translation and scale of the source. The optimal fit is found by finding the minimum sum of squared distances error. The error is computed by finding the SSD of pixel values and the SSD of a 5x5 pixel median filter on both images which acts to match similar textures. The algorithm iterates over all possible translations and a range of scales to find the optimal fit. The exhaustive nature of this method is computationally taxing; it is only feasible to run the method on a small set of images.
 
 \paragraph{\sc Graph Cut}
 
 \paragraph{\sc Poisson Blending}
-
-
 A method is needed to combine the target image and the source image given by the local context matching. Simply pasting the images together may result in a jarring transition with mismatching color values. Poisson blending alleviates this by operating on the source image gradient; a solution is found which minimizes the changes to the gradient while obeying boundary conditions which match the pixel values in the source on the edge of the context to the target image. The resulting image features a smooth transition with matching color values while preserving the contents of the source image.
 
 
