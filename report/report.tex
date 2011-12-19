@@ -35,7 +35,7 @@ Say why your method is better than previous work; and/or summarize the key main 
 \section{Technical}
 
 \subsection{Technical Summary}
-Technical part: Summary of the technical solution 
+Our method follows the method proposed by Hays and Efros\cite{Hays:2007} with a resizing extension based off of Avidan and Ahamir. \cite{Avidan:2007} The method is reliant on a large database of images which we gathered using the Flickr API. A gist descriptor is computed for each image to allow quick semantic comparisons as proposed by Torralba. \cite{Torralba:2006} After the database has been initialized, a user may run the program by specifying a target image, an area of the image to remove, and the amount of pixels to resize each dimension by. The program then finds a small subset of images that are semantically similar to the target image. Resizing via seam carving is performed on the target image if applicable. For each image in the matched subset, local context matching and graph cut are used to find the optimal image translation and border. The final set of composite images is created by using poisson blending to seamlessly blend the images together.
 
 \subsection{Technical Details}
 Technical part: Details of the technical solution; you may want to decompose this section into several subsections; add figures to help your explanation. 
