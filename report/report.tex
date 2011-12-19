@@ -36,7 +36,7 @@ The scene completion method presented by Hays and Effros is designed to take adv
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[scale=.6]{projectOverview.png}
+\includegraphics[scale=.5]{projectOverview.png}
 \caption{Overview of scene completion.}
 \label{llamaSeam}
 \end{center}
@@ -46,7 +46,7 @@ We also consider the problem of image resizing. One may wish to change the aspec
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[scale=.6]{seamOverview.png}
+\includegraphics[scale=.5]{seamOverview.png}
 \caption{Proposed resizing algorithm.}
 \label{llamaSeam}
 \end{center}
@@ -54,10 +54,23 @@ We also consider the problem of image resizing. One may wish to change the aspec
 
 \section{Overview} 
 \subsection{Previous Work}
-Review of previous work (i.e. previous methods that have explored a similar problem)
+This paper is based largely on the work done by Hays and Efros \cite{Hays:2007} and
+Avidan and Ahamir \cite{Avidan:2007}. There have been many papers published on the
+topic of scene completion, but Hays and Efros are the first to propose a method that leverages
+a large database of images downloaded from internet sources. 
+
+The two basic strategies that have been explored in scene completion differ in the question that
+they aim to answer. The first asks, ``what should have been there?'', while the second asks, ``what 
+could have been there?'' \cite{Hays:2007}. Research in the first method tends to rely on multiple images of the input scene. Methods in the second camp tend to extend textures that already exist in the input image, such as the PatchMatch algorithm that is used as the basis for Content-Aware Fill in
+Adobe Photoshop \cite{Barnes:2009}. The advantage of the method proposed by Hays and Efros is that is does not rely on either of these techniques. 
+
+The image resizing algorithm proposed by Avidan and Ahamir has attracted a lot of attention due
+to its simplicity and effectiveness. We use this paper as inspiration and take advantage of the seam carving algorithm that they proposed, but do not borrow their technique for resizing. Our resizing technique, to the best of our knowledge, is the first image resizing technique based on a scene
+completion algorithm.
 
 \subsection{Our Method}
-Say why your method is better than previous work; and/or summarize the key main contributions of your work; 
+
+We have implemented the method of scene completion proposed by Hays and Efros \cite{Hays:2007}. This algorithm allows a user to identify a certain area of an image to automatically be filled with new content. We also propose a novel use of this scene completion method in image resizing. This allows us to perform dynamic, content-aware image resizing based upon the seam carving method proposed by Avidan and Ahamir \cite{Avidan:2007}.
 
 \section{Technical}
 
@@ -111,7 +124,7 @@ We use the seam finding algorithm proposed by Avidan and Shamir \cite{Avidan:200
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[scale=.6]{seam.png}
+\includegraphics[scale=.38]{seam.png}
 \caption{An optimal seam displayed on an image of a llama.}
 \label{llamaSeam}
 \end{center}
@@ -142,7 +155,7 @@ of empty pixels are inserted into the images along the seam, as seen in Figure \
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[scale=.45]{broken.png}
+\includegraphics[scale=.4]{broken.png}
 \caption{An image cut along the optimal vertical seam and extended horizontally 200 pixels.}
 \label{llamaCut}
 \end{center}
@@ -191,20 +204,24 @@ it was still not perfect. The computational cost of this algorithm made it diffi
 that these results show that we have produced a sound implementation of the algorithm that would
 continue to perform better as more images were added to the database.
 
-\subsection{Dynamic Resizing}
-
-Our results for dynamic image resizing using scene completion were unimpressive, but this must be due in part to the size of our database. The area of that needed to be filled in by the scene completion algorithm was particularly awkward if the user wanted to resize in both the horizontal and vertical directions. This made finding an accurate match image even more difficult. Results of resizing in only one direction showed more promise, but the area to complete was so large that they were not perfect. We believe that a much larger image database is necessary to get natural looking results for our proposed resizing algorithm.
-
 \begin{figure}[h]
 \begin{center}$
 \begin{array}{cc}
-\includegraphics[scale=.3]{mountains.png} &
-\includegraphics[scale=.3]{1resize.png}
+\includegraphics[scale=.3]{mountains100kInsert.png} &
+\includegraphics[scale=.3]{mountainsInsert2.png} \\
+\includegraphics[scale=.3]{water100k.png} & 
+\includegraphics[scale=.2]{snake.png}
 \end{array}$
 \end{center}
-\caption{Single direction resizing results.}
+\caption{Some completed scenes.}
 \label{vertResize}
 \end{figure}
+
+
+\subsection{Dynamic Resizing}
+
+Our results for dynamic image resizing using scene completion were unimpressive, but this must be due in part to the size of our database. The area of that needed to be filled in by the scene completion algorithm was particularly awkward if the user wanted to resize in both the horizontal and vertical directions. This made finding an accurate match image even more difficult. 
+
 
 \begin{figure}[htbp]
 \begin{center}$
@@ -217,11 +234,41 @@ Our results for dynamic image resizing using scene completion were unimpressive,
 \end{center}
 \end{figure}
 
+Results of resizing in only one direction showed more promise, but the area to complete was so large that they were not perfect. We believe that a much larger image database is necessary to get natural looking results for our proposed resizing algorithm.
+
+\begin{figure}[h]
+\begin{center}$
+\begin{array}{cc}
+\includegraphics[scale=.3]{mountains.png} &
+\includegraphics[scale=.3]{1resize.png} \\
+\includegraphics[scale=.3]{llama.png} &
+\includegraphics[scale=.3]{llamaResize.png}
+\end{array}$
+\end{center}
+\caption{Single direction resizing results.}
+\label{vertResize}
+\end{figure}
+
+
 \section{Conclusion}
 
 \subsection{Current Results}
 
+Our results confirm that it is possible to leverage a large database of images in order to perform
+scene completion. The drawback of this method is that it is computationally expensive and requires
+a near exact match image to be found in the database. This method also requires the large 
+upfront cost of constructing the database. Because of time constraints our database was not as
+large as that in \cite{Hays:2007} and hence our implementation was not as robust. That being said,
+we still saw some promising results and were able to see some natural looking output images. We 
+believe that our implementation of the algorithm was sound and would have continued to increase in
+performance as we added more images to the database.
+
+Our proposed method of image resizing using seam completion did not produce many natural looking results. It did however point out one of the weaknesses of this method of seam completion: as the 
+area of completion grows larger, the Poisson blending becomes increasingly less effective.
+
 \subsection{Future Work}
+
+As it stands, this algorithm is not suitable for widespread use because of the extensive runtime and requirement of a large local database. A future project may include setting up a web service that would allow a user to upload an image and mask, and then return a semantically close set of images. This would allow researchers to implement the rest of the scene completion without requiring them to compile a huge amount of images.
 
 \bibliographystyle{plain}
 \bibliography{bibliography}
