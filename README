@@ -34,7 +34,11 @@ After implementing the scene completion algorithm, we intend to apply it to imag
 
 We intend to use Avidan and Ahmir’s method to find the weakest seam. Given the weakest seam in the image, we can cut the image along the seam and pull it apart vertically or horizontally. This will leave us with an image which is the desired size, but now has an area without content. We will then use the previously described scene completion algorithm to fill in this area. 
 
-3. References
+3. Instructions
+
+To use the program, open Matlab and first run the getAllGists(directory_name) script where directory_name is a directory containing a set of images. After the gist descriptors have been built, you may run runContextMatching(target_filename, img_directory, x_resize, y_resize) where target_filename is the filename of the image you wish to modify, img_directory is the directory of images as before, x_resize is the amount to increase the x dimension of the image, and y_resize is the amount to increase the y dimension of the image.
+
+4. References
 
 James Hays, Alexei A. Efros. Scene Completion Using Millions of Photographs. ACM Transactions on Graphics (SIGGRAPH 2007). August 2007, vol. 26, No. 3.
 
