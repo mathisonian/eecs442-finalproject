@@ -23,7 +23,7 @@ function [ matches, imgMask ] = getMatchingImages( img, indir )
 %                         + COLOR_WEIGHT_CONSTANT*colorSSD;
     end
     
-    [B,IX] = sort(diffs,'descend');
+    [B,IX] = sort(diffs,'ascend');
     matches = cell(1,NUM_MATCHES);
     for i=1:NUM_MATCHES
         matches{i} = imgs{IX(i)};
