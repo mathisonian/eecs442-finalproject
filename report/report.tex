@@ -78,9 +78,14 @@ We have implemented the method of scene completion proposed by Hays and Efros \c
 Technical part: Summary of the technical solution 
 
 \subsection{Technical Details}
-Technical part: Details of the technical solution; you may want to decompose this section into several subsections; add figures to help your explanation. 
+
+We break this section up into two subsections, one for the scene completion algorithm, and one
+for the seam carving algorithm. These sections contain the technical specifics necessary to implement 
+the algorithms.
+
 \subsubsection{Scene Completion Algorithm}
-blah blah blah
+
+The scene completion algorithm can be broken down into four parts once the database of images has been created. The first part is to identify a subset of the database that is similar to the input image (semantic matching). The next part is to take each of these images and to find the best scale and translation for them to fill in the removed area (local context matching). After that, the most natural looking edge needs to be selected from the context area (graph-cut). Finally the last step is to perform a Poisson blend to make the final image look natural.
 
 \paragraph{\sc Semantic Matching} 
 
@@ -122,9 +127,17 @@ A method is needed to combine the target image and the source image given by the
 
 
 We use poisson blending as described in P$\acute{e}$rez et. al. \cite{Perez:2003} We define $f$ to be the unknown portion of the target image in the context $\Omega$. The known portion of the image is defined as $f^\ast$ and the gradient of the source image is defined as $v$. To successfully blend the images we must solve the following minimization problem:
-$$ \min_f \iint_\Omega|\nabla f-v|^{2} \;\mathrm{with}\; f|_{\partial\Omega} = f^{\ast}|_{\partial\Omega} $$
+
+$$ 
+\min_f \iint_\Omega|\nabla f-v|^{2} \;\mathrm{with}\; f|_{\partial\Omega} = f^{\ast}|_{\partial\Omega} 
+$$
+
 $\nabla$ is the gradient operator and $\partial\Omega$ is the boundary of the context area. The above equation's solution is the unique solution to the following Poisson equation:
-$$\Delta f=\mathrm{div} v\;\mathrm{ over }\;\Omega\;\mathrm{  with}\;  f|_{\partial\Omega} = f^{\ast}|_{\partial\Omega}$$
+
+$$
+\Delta f=\mathrm{div} v\;\mathrm{ over }\;\Omega\;\mathrm{  with}\;  f|_{\partial\Omega} = f^{\ast}|_{\partial\Omega}
+$$
+
 $\Delta f = \frac{\partial^{2} f}{\partial^{2}x^2}+\frac{\partial^{2}f}{\partial^{2}x^2}$ is the Laplacian operator and $\mathrm{div} v = \frac{\partial u}{\partial x}+\frac{\partial v}{\partial y}$ is the divergence of the gradient $v=(u,v)$.
 
 
@@ -204,7 +217,6 @@ We began testing the scene completion algorithm when we had built up a database 
 \end{figure}
 
 With a database this size, there was seldom a close enough match image to provide satisfactory results. Occasionally we would get output images that were semantically incorrect yet still looked somewhat natural, as seen in Figure \ref{badMatch}. We had success doing scene completion when we removed areas of the area that we heterogeneous in content (such as a patch of an image that was all one texture, e.g. a patch of grass), as in Figure \ref{llamaMatch}.
-
 
 \subsection{Further Results ($\approx100000$ images)} 
 
