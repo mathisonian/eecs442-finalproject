@@ -59,7 +59,7 @@ function [ matches, imgMask, img ] = getMatchingImagesSeam( img, indir, extendVa
 %                         + COLOR_WEIGHT_CONSTANT*colorSSD;
     end
     
-    [B,IX] = sort(diffs,'descend');
+    [B,IX] = sort(diffs,'ascend');
     matches = cell(1,NUM_MATCHES);
     for i=1:NUM_MATCHES
         matches{i} = imgs{IX(i)};
