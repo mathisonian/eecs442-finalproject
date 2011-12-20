@@ -19,7 +19,7 @@
 
 \begin{abstract}
 The problem of scene completion has received much attention in recent computer vision research. We 
-look at a solution proposed by Hays and Effros \cite{Hays:2007}. We provide our own implementation of the
+look at a solution proposed by Hays and Efros \cite{Hays:2007}. We provide our own implementation of the
 algorithm proposed in \cite{Hays:2007} and examine the results. We also propose a method of using this 
 scene completion algorithm to dynamically resize images using the seam carving algorithm
 given by Avidan and Shamir \cite{Avidan:2007}. We consider the benefits and drawbacks that are associated with the previously mentioned methods of scene completion and image resizing. These methods are computationally expensive and rely on a local database of millions of images to achieve satisfactory results. This makes the algorithm intractable for widespread use, but we consider possible remedies for this in our future work section. 
@@ -28,11 +28,11 @@ given by Avidan and Shamir \cite{Avidan:2007}. We consider the benefits and draw
 
 \section{Introduction}
 
-In this paper we consider an algorithm for scene completion based on work by Hays and Effros \cite{Hays:2007}. This algorithm allows a user to select an area of a picture and then algorithmically fills that area in with different visual content from another image. This is a difficult problem because the content that is added to the image must look as if it was part of the image originally. 
+In this paper we consider an algorithm for scene completion based on work by Hays and Efros \cite{Hays:2007}. This algorithm allows a user to select an area of a picture and then algorithmically fills that area in with different visual content from another image. This is a difficult problem because the content that is added to the image must look as if it was part of the image originally. 
 
 There are many reasons why a person would wish to remove part of an image. For example, perhaps some passers-by have entered into the background and ruined an otherwise beautiful image. It may be the case that a person is in the photograph who has fallen out of favor (e.g. an ex-girlfriend), or maybe there is politically incendiary content that needs to be removed \cite{King:1997}. As further evidence that this problem is relevant outside of the academic world, Adobe Photoshop CS5 (the most recent version of the popular image editing software at time of writing ) features a new tool called ``Content-Aware Fill'' that allows users to remove certain areas from their images \cite{Barnes:2009}. 
 
-The scene completion method presented by Hays and Effros is designed to take advantage of the plethora of data currently available on the internet. The intuition behind the algorithm is to compile a large database of images and then, when it is time to do scene completion, try using a subset of these images that is semantically close to the original. For each image in this subset, its optimal scale and position is calculated and then the relevant area of that image is pasted into the original scene. Some post processing is done to make the entire scene look more natural. This method is displayed graphically in Figure \ref{scene}. As the size of the image database is increased, so will the believability of the scene completion.
+The scene completion method presented by Hays and Efros is designed to take advantage of the plethora of data currently available on the internet. The intuition behind the algorithm is to compile a large database of images and then, when it is time to do scene completion, try using a subset of these images that is semantically close to the original. For each image in this subset, its optimal scale and position is calculated and then the relevant area of that image is pasted into the original scene. Some post processing is done to make the entire scene look more natural. This method is displayed graphically in Figure \ref{scene}. As the size of the image database is increased, so will the believability of the scene completion.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -42,7 +42,7 @@ The scene completion method presented by Hays and Effros is designed to take adv
 \end{center}
 \end{figure}
 
-We also consider the problem of image resizing. One may wish to change the aspect ratio of an image without stretching or compressing the content of the image. We propose a new method of dynamic resizing based on the method of seam carving presented by Avidan and Shamir \cite{Avidan:2007} that takes advantage of Hays and Effros' work on scene completion. We carve a seam and then insert an image mask along that seam. This allows us to essentially cut the image along the seam and pull it apart. The scene completion algorithm then fills in the empty area around the seam with semantically relevant content as shown in Figure \ref{resize}. 
+We also consider the problem of image resizing. One may wish to change the aspect ratio of an image without stretching or compressing the content of the image. We propose a new method of dynamic resizing based on the method of seam carving presented by Avidan and Shamir \cite{Avidan:2007} that takes advantage of Hays and Efros' work on scene completion. We carve a seam and then insert an image mask along that seam. This allows us to essentially cut the image along the seam and pull it apart. The scene completion algorithm then fills in the empty area around the seam with semantically relevant content as shown in Figure \ref{resize}. 
 
 \begin{figure}[htbp]
 \begin{center}
@@ -55,7 +55,7 @@ We also consider the problem of image resizing. One may wish to change the aspec
 \section{Overview} 
 \subsection{Previous Work}
 This paper is based largely on the work done by Hays and Efros \cite{Hays:2007} and
-Avidan and Ahamir \cite{Avidan:2007}. There have been many papers published on the
+Avidan and Shamir \cite{Avidan:2007}. There have been many papers published on the
 topic of scene completion, but Hays and Efros are the first to propose a method that leverages
 a large database of images downloaded from internet sources. 
 
@@ -64,18 +64,18 @@ they aim to answer. The first asks, ``what should have been there?'', while the 
 could have been there?'' \cite{Hays:2007}. Research in the first method tends to rely on multiple images of the input scene. Methods in the second camp tend to extend textures that already exist in the input image, such as the PatchMatch algorithm that is used as the basis for Content-Aware Fill in
 Adobe Photoshop \cite{Barnes:2009}. The advantage of the method proposed by Hays and Efros is that is does not rely on either of these techniques. 
 
-The image resizing algorithm proposed by Avidan and Ahamir has attracted a lot of attention due
+The image resizing algorithm proposed by Avidan and Shamir has attracted a lot of attention due
 to its simplicity and effectiveness. We use this paper as inspiration and take advantage of the seam carving algorithm that they proposed, but do not borrow their technique for resizing. Our resizing technique, to the best of our knowledge, is the first image resizing technique based on a scene
 completion algorithm.
 
 \subsection{Our Method}
 
-We have implemented the method of scene completion proposed by Hays and Efros \cite{Hays:2007}. This algorithm allows a user to identify a certain area of an image to automatically be filled with new content. We also propose a novel use of this scene completion method in image resizing. This allows us to perform dynamic, content-aware image resizing based upon the seam carving method proposed by Avidan and Ahamir \cite{Avidan:2007}.
+We have implemented the method of scene completion proposed by Hays and Efros \cite{Hays:2007}. This algorithm allows a user to identify a certain area of an image to automatically be filled with new content. We also propose a novel use of this scene completion method in image resizing. This allows us to perform dynamic, content-aware image resizing based upon the seam carving method proposed by Avidan and Shamir \cite{Avidan:2007}.
 
 \section{Technical}
 
 \subsection{Technical Summary}
-Our method follows the method proposed by Hays and Efros\cite{Hays:2007} with a resizing extension based off of Avidan and Ahamir. \cite{Avidan:2007} The method is reliant on a large database of images which we gathered using the Flickr API. A gist descriptor is computed for each image to allow quick semantic comparisons as proposed by Torralba. \cite{Torralba:2006} After the database has been initialized, a user may run the program by specifying a target image, an area of the image to remove, and the amount of pixels to resize each dimension by. The program then finds a small subset of images that are semantically similar to the target image. Resizing via seam carving is performed on the target image if applicable. For each image in the matched subset, local context matching and graph cut are used to find the optimal image translation and border. The final set of composite images is created by using poisson blending to seamlessly blend the images together.
+Our method follows the method proposed by Hays and Efros\cite{Hays:2007} with a resizing extension based off of Avidan and Shamir. \cite{Avidan:2007} The method is reliant on a large database of images which we gathered using the Flickr API. A gist descriptor is computed for each image to allow quick semantic comparisons as proposed by Torralba and Oliva. \cite{Torralba:2006} After the database has been initialized, a user may run the program by specifying a target image, an area of the image to remove, and the amount of pixels to resize each dimension by. The program then finds a small subset of images that are semantically similar to the target image. Resizing via seam carving is performed on the target image if applicable. For each image in the matched subset, local context matching and graph cut are used to find the optimal image translation and border. The final set of composite images is created by using Poisson blending to seamlessly blend the images together.
 
 \subsection{Technical Details}
 
@@ -89,7 +89,7 @@ The scene completion algorithm can be broken down into four parts once the datab
 
 \paragraph{\sc Semantic Matching} 
 
-Because the database of images is so large, it must be cut down to a relatively small subset of images before the local context matching can occur. If this were not the case, the algorithm would be computationally unfeasible (local context matching is the most expensive part of the process). 
+Because the database of images is so large, it must be cut down to a relatively small subset of images before the local context matching can occur. If this were not the case, the algorithm would be computationally infeasible (local context matching is the most expensive part of the process). 
 
 In order to find images in the database that are most likely to yield a good local match, we try to find images in the database that are most semantically similar to the original image. We take advantage of prior work by Torralba and Oliva to define semantic similarity \cite{Torralba:2006}. We measure semantic similarity of two images by comparing taking the SSD of the gist descriptors of each image. In accordance with findings in previous work, we use gist descriptors with 6 oriented edge responses at 5 scales aggregated to a
 4x4 spatial resolution \cite{Hays:2007}. We use the $n$ images that are semantically closest to the original
@@ -103,7 +103,7 @@ We follow the context matching method proposed by Hays and Efros.\cite{Hays:2007
 
 \paragraph{\sc Graph Cut}
 
-Following the method of Hayes and Effros \cite{Hays:2007} we allow for dynamic expansion of the border around the area of the image which is to be replaced. That is, we allow the area to expand (up to 80 pixels in any direction) but not contract. The reasoning behind this is that it will allow for a more natural integration of the match image into the original image. Contraction of the area is not allowed because this could possibly cause specific objects that the user is trying to delete to remain in the image. 
+Following the method of Hayes and Efros \cite{Hays:2007} we allow for dynamic expansion of the border around the area of the image which is to be replaced. That is, we allow the area to expand (up to 80 pixels in any direction) but not contract. The reasoning behind this is that it will allow for a more natural integration of the match image into the original image. Contraction of the area is not allowed because this could possibly cause specific objects that the user is trying to delete to remain in the image. 
 
 
 The problem then is to identify the border which will make the match look the most natural. This formulation can be reduced to a graph cut problem. We take each pixel in the context region (the 80 pixel buffer around the original selection) and treat it as a vertex on a graph. Then, we assign weights to each of the edges. The weights are based on the following formula
@@ -126,7 +126,7 @@ where $i,j$ are adjacent pixels, $\triangledown diff(i,j)$ is the magnitude of t
 A method is needed to combine the target image and the source image given by the local context matching. Simply pasting the images together may result in a jarring transition with mismatching color values. Poisson blending alleviates this by operating on the source image gradient; a solution is found which minimizes the changes to the gradient while obeying boundary conditions which match the pixel values in the source on the edge of the context to the target image. The resulting image features a smooth transition with matching color values while preserving the contents of the source image.
 
 
-We use poisson blending as described in P$\acute{e}$rez et. al. \cite{Perez:2003} We define $f$ to be the unknown portion of the target image in the context $\Omega$. The known portion of the image is defined as $f^\ast$ and the gradient of the source image is defined as $v$. To successfully blend the images we must solve the following minimization problem:
+We use Poisson blending as described in P$\acute{e}$rez et. al. \cite{Perez:2003} We define $f$ to be the unknown portion of the target image in the context $\Omega$. The known portion of the image is defined as $f^\ast$ and the gradient of the source image is defined as $v$. To successfully blend the images we must solve the following minimization problem:
 
 $$ 
 \min_f \iint_\Omega|\nabla f-v|^{2} \;\mathrm{with}\; f|_{\partial\Omega} = f^{\ast}|_{\partial\Omega} 
@@ -187,7 +187,7 @@ of empty pixels are inserted into the images along the seam, as seen in Figure \
 
 \section{Experiments}
 
-The best available metric for determining the success of this algorithm is to present the output images (the completed scenes) and let humans determine if they appear natural or not. Unfortunately there is no better way to quantize this than to distribute the output images to be judged by impartial test subjects \cite{Hays:2007}, but the time frame of this project did not allow for such experiments. Here we show output images, both good and bad, and provide commentary on them and how they display a strength or weakness of the algorithmm. Overall we found the algorithm to be relatively ineffective \emph{unless} there was a near exact match in the image database.
+The best available metric for determining the success of this algorithm is to present the output images (the completed scenes) and let humans determine if they appear natural or not. Unfortunately there is no better way to quantize this than to distribute the output images to be judged by impartial test subjects \cite{Hays:2007}, but the time frame of this project did not allow for such experiments. Here we show output images, both good and bad, and provide commentary on them and how they display a strength or weakness of the algorithm. Overall we found the algorithm to be relatively ineffective \emph{unless} there was a near exact match in the image database.
 
 \subsection{Preliminary Results ($\approx14000$ images)}
 
@@ -216,13 +216,13 @@ We began testing the scene completion algorithm when we had built up a database 
 \label{badMatch}
 \end{figure}
 
-With a database this size, there was seldom a close enough match image to provide satisfactory results. Occasionally we would get output images that were semantically incorrect yet still looked somewhat natural, as seen in Figure \ref{badMatch}. We had success doing scene completion when we removed areas of the area that we heterogeneous in content (such as a patch of an image that was all one texture, e.g. a patch of grass), as in Figure \ref{llamaMatch}.
+With a database this size, there was seldom a close enough match image to provide satisfactory results. Occasionally we would get output images that were semantically incorrect yet still looked somewhat natural, as seen in Figure \ref{badMatch}. We had success doing scene completion when we removed areas of the area that were heterogeneous in content (such as a patch of an image that was all one texture, e.g. a patch of grass), as in Figure \ref{llamaMatch}.
 
 \subsection{Further Results ($\approx100000$ images)} 
 
 Expanding our database to over one-hundred thousand images increased the robustness of 
 the scene completion algorithm. We were able to fill in more complex areas of an image, but
-it was still not perfect. The computational cost of this algorithm made it difficult given the time constraints, so we were not able to build a database as large as that of Hays and Effros. We believe 
+it was still not perfect. The computational cost of this algorithm made it difficult given the time constraints, so we were not able to build a database as large as that of Hays and Efros. We believe 
 that these results show that we have produced a sound implementation of the algorithm that would
 continue to perform better as more images were added to the database.
 
