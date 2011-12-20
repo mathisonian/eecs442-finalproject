@@ -91,7 +91,7 @@ The scene completion algorithm can be broken down into four parts once the datab
 
 Because the database of images is so large, it must be cut down to a relatively small subset of images before the local context matching can occur. If this were not the case, the algorithm would be computationally infeasible (local context matching is the most expensive part of the process). 
 
-In order to find images in the database that are most likely to yield a good local match, we try to find images in the database that are most semantically similar to the original image. We take advantage of prior work by Torralba and Oliva to define semantic similarity \cite{Torralba:2006}. We measure semantic similarity of two images by comparing taking the SSD of the gist descriptors of each image. In accordance with findings in previous work, we use gist descriptors with 6 oriented edge responses at 5 scales aggregated to a
+In order to find images in the database that are most likely to yield a good local match, we try to find images in the database that are most semantically similar to the original image. We take advantage of prior work by Torralba and Oliva to define semantic similarity \cite{Torralba:2006}. We measure semantic similarity of two images by comparing the gist descriptors of each image. As the SSD between their gists decreases, the semantic similarity increases. In accordance with findings in previous work, we use gist descriptors with 6 oriented edge responses at 5 scales aggregated to a
 4x4 spatial resolution \cite{Hays:2007}. We use the $n$ images that are semantically closest to the original
 for the local context matching step. 
 
